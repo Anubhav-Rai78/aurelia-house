@@ -21,11 +21,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // ── Aurelia House ─────────────────────────────────────────────────
-        primary: "bg-forest text-ivory hover:bg-terracotta hover:text-ivory",
+        // Note: Use !important on text colors to prevent parent text-color inheritance
+        // (e.g., header's text-forest cascading into buttons when scrolled)
+        primary: "bg-forest text-ivory !important hover:bg-terracotta hover:text-ivory !important",
         secondary:
           "bg-transparent text-forest border border-forest hover:bg-forest/10",
         "primary-inverse":
-          "bg-ivory text-forest hover:bg-terracotta hover:text-ivory",
+          "bg-ivory text-forest hover:bg-terracotta hover:text-ivory !important",
         "secondary-inverse":
           "bg-transparent text-ivory border border-ivory hover:bg-ivory/10",
         // ── Additional utility variants ─────────────────────────────────────

@@ -20,7 +20,9 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {/* Column 1 — Wordmark + tagline */}
           <div className="col-span-2 md:col-span-1">
-            <p className="text-display-sm">{BRAND_NAME}</p>
+            <Link href="/" className="text-display-sm hover:opacity-80 transition-opacity">
+              {BRAND_NAME}
+            </Link>
             <p className="mt-3 text-body-sm text-ivory/70">{TAGLINE}</p>
           </div>
 

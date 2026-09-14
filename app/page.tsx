@@ -32,7 +32,7 @@ export default function HomePage() {
           </div>
         </div>
         <div
-          className="absolute inset-0 bg-gradient-to-t from-forest/60 via-forest/10 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-forest/85 via-forest/45 to-forest/30"
           aria-hidden="true"
         />
         <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 md:px-12">
