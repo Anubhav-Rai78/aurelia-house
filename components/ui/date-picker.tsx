@@ -79,6 +79,7 @@ export function Calendar({
 export interface DatePickerProps {
   date?: string; // YYYY-MM-DD
   onDateChange: (dateISO: string) => void;
+  label?: string;
   placeholder?: string;
   minDate?: Date;
   className?: string;
@@ -87,6 +88,7 @@ export interface DatePickerProps {
 export function DatePicker({
   date,
   onDateChange,
+  label,
   placeholder = "Select date",
   minDate,
   className,
@@ -104,11 +106,14 @@ export function DatePicker({
 
   return (
     <div className={cn("relative w-full", className)}>
+      {label && (
+        <label className="text-label text-forest/60">{label}</label>
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
             type="button"
-            className="flex w-full items-center justify-between border-b border-forest/15 bg-transparent py-2.5 text-left font-sans text-body text-forest focus:border-terracotta focus:outline-none transition-colors"
+            className="mt-2 flex w-full items-center justify-between border-b border-forest/15 bg-transparent py-2.5 text-left font-sans text-body text-forest focus:border-terracotta focus:outline-none transition-colors"
           >
             <span className={cn(!selectedDate && "text-forest/40")}>
               {selectedDate ? format(selectedDate, "MMM dd, yyyy") : placeholder}
@@ -122,6 +127,7 @@ export function DatePicker({
             selected={selectedDate}
             onSelect={handleSelect}
             defaultMonth={selectedDate || undefined}
+            disabled={minDate ? { before: minDate } : undefined}
           />
         </PopoverContent>
       </Popover>
