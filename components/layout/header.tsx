@@ -76,7 +76,7 @@ export function Header() {
             aria-label="Aurelia House — home"
           >
             <BrandIcon
-              size={30}
+              size={120}
               className="shrink-0 transition-colors duration-300 group-hover:text-terracotta"
             />
             <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
