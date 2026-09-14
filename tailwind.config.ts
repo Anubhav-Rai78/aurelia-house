@@ -12,6 +12,17 @@ const config: Config = {
     "./components/**/*.{ts,tsx}",
     "./data/**/*.{ts,tsx}",
   ],
+  // Safelist button text colors to prevent JIT from stripping them
+  safelist: [
+    "text-ivory",
+    "text-forest",
+    "hover:text-ivory",
+    "hover:text-forest",
+    "text-ivory!",
+    "text-forest!",
+    "hover:text-ivory!",
+    "hover:text-forest!",
+  ],
   theme: {
     extend: {
       colors: {
