@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Facebook, Instagram, ArrowRight } from "lucide-react";
+import { BrandIcon } from "@/components/ui/brand-icon";
 import {
   BRAND_NAME,
   CONTACT,
@@ -33,8 +34,9 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           {/* Column 1 — Wordmark + tagline + Newsletter */}
           <div className="col-span-1 md:col-span-1">
-            <Link href="/" className="text-display-sm transition-opacity hover:opacity-80">
-              {BRAND_NAME}
+            <Link href="/" className="inline-flex flex-col items-start transition-opacity hover:opacity-80">
+              <BrandIcon size={36} className="mb-3 text-ivory" />
+              <span className="text-display-sm">{BRAND_NAME}</span>
             </Link>
             <p className="mt-3 text-body-sm text-ivory/70">{TAGLINE}</p>
 

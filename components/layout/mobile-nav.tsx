@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
+import { BrandIcon } from "@/components/ui/brand-icon";
 import { Button } from "@/components/ui/button";
 import { BRAND_NAME, BOOKING_CTA } from "@/lib/constants";
 import { NAV_LINKS } from "@/data/navigation";
@@ -48,9 +49,15 @@ export function MobileNav({
         <Link
           href="/"
           onClick={onClose}
-          className="font-serif text-[20px] font-medium tracking-[0.02em]"
+          className="group flex items-center gap-3"
         >
-          {BRAND_NAME}
+          <BrandIcon
+            size={30}
+            className="shrink-0 transition-colors duration-300 group-hover:text-terracotta"
+          />
+          <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
+            {BRAND_NAME}
+          </span>
         </Link>
         <button
           type="button"

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
+import { BrandIcon } from "@/components/ui/brand-icon";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { BRAND_NAME, BOOKING_CTA } from "@/lib/constants";
@@ -71,10 +72,16 @@ export function Header() {
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
-            className="py-6 font-serif text-[20px] font-medium tracking-[0.02em]"
+            className="group flex items-center gap-3 py-6"
             aria-label="Aurelia House — home"
           >
-            {BRAND_NAME}
+            <BrandIcon
+              size={30}
+              className="shrink-0 transition-colors duration-300 group-hover:text-terracotta"
+            />
+            <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
+              {BRAND_NAME}
+            </span>
           </Link>
 
           {/* Desktop nav (md and up) */}
