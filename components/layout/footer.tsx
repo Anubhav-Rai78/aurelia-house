@@ -29,7 +29,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-forest py-16 text-ivory md:py-24">
+    <footer className="bg-forest py-12 text-ivory md:py-20">
       <div className="mx-auto max-w-[1440px] px-6 md:px-12">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           {/* Column 1 — Wordmark + tagline + Newsletter */}

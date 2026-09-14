@@ -65,9 +65,13 @@ export function Header() {
           "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
           solid
             ? "border-b border-forest/10 bg-ivory text-forest"
-            : "bg-transparent text-ivory"
+            : "bg-transparent text-ivory",
+          // Make sure the fixed header doesn't overlap page content.
+          "h-[72px]"
         )}
       >
+      
+      
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 md:px-12">
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
