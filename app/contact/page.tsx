@@ -2,19 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { format, parseISO } from "date-fns";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { CustomSelect } from "@/components/ui/select";
+import { FormField } from "@/components/ui/form-field";
 import { CONTACT_PAGE, CONTACT } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
 import { MapPin, Phone, Mail, Navigation, CheckCircle2 } from "lucide-react";
+import { rooms } from "@/data/rooms";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -24,10 +21,13 @@ export default function ContactPage() {
 
   const searchParams = useSearchParams();
 
+  const guestOptions = CONTACT_PAGE.guestOptions.map((opt) => ({ label: opt, value: opt }));
+  const roomOptions = rooms.map((room) => ({ label: room.name, value: room.name }));
+
   const [formData, setFormData] = useState({
     checkin: searchParams.get("checkin") || "",
     checkout: searchParams.get("checkout") || "",
-    room: searchParams.get("room") || "Select a room",
+    room: searchParams.get("room") || "",
     guests: searchParams.get("guests") || "2 Adults",
     name: "",
     email: "",
@@ -67,7 +67,7 @@ export default function ContactPage() {
       guests: formData.guests,
       checkin: formData.checkin,
       checkout: formData.checkout,
-      room: formData.room === "Select a room" ? "Courtyard Room" : formData.room,
+      room: !formData.room || formData.room === "Select a room" ? "Courtyard Room" : formData.room,
       message: formData.message,
     };
 
@@ -120,8 +120,7 @@ export default function ContactPage() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label htmlFor="name" className="text-label text-forest/60">YOUR NAME *</label>
+                  <FormField htmlFor="name" label="YOUR NAME *">
                     <input
                       id="name"
                       name="name"
@@ -132,9 +131,8 @@ export default function ContactPage() {
                       className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
                       placeholder="Full Name"
                     />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="text-label text-forest/60">EMAIL ADDRESS *</label>
+                  </FormField>
+                  <FormField htmlFor="email" label="EMAIL ADDRESS *">
                     <input
                       id="email"
                       name="email"
@@ -145,12 +143,11 @@ export default function ContactPage() {
                       className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
                       placeholder="you@email.com"
                     />
-                  </div>
+                  </FormField>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label htmlFor="phone" className="text-label text-forest/60">PHONE NUMBER</label>
+                  <FormField htmlFor="phone" label="PHONE NUMBER">
                     <input
                       id="phone"
                       name="phone"
@@ -160,63 +157,46 @@ export default function ContactPage() {
                       className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
                       placeholder="+91 …"
                     />
-                  </div>
-                  <div>
-                    <label className="text-label text-forest/60">GUESTS</label>
-                    <Select
-                      value={formData.guests}
-                      onValueChange={(val) => setFormData({ ...formData, guests: val })}
-                    >
-                      <SelectTrigger className="mt-2 py-3">
-                        <SelectValue placeholder="Select guests" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CONTACT_PAGE.guestOptions.map((opt) => (
-                          <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  </FormField>
+                  <CustomSelect
+                    label="GUESTS"
+                    name="guests"
+                    value={formData.guests || undefined}
+                    onValueChange={(val) => setFormData({ ...formData, guests: val })}
+                    options={guestOptions}
+                    placeholder="Select guests"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <DatePicker
-                      label="CHECK-IN DATE"
-                      date={formData.checkin}
-                      onDateChange={(val) => setFormData({ ...formData, checkin: val })}
-                      placeholder="Select check-in"
-                    />
-                  </div>
-                  <div>
-                    <DatePicker
-                      label="CHECK-OUT DATE"
-                      date={formData.checkout}
-                      onDateChange={(val) => setFormData({ ...formData, checkout: val })}
-                      placeholder="Select check-out"
-                    />
-                  </div>
+                  <DatePicker
+                    label="CHECK-IN DATE"
+                    date={formData.checkin ? parseISO(formData.checkin) : undefined}
+                    onDateChange={(d) =>
+                      setFormData((prev) => ({ ...prev, checkin: d ? format(d, "yyyy-MM-dd") : "" }))
+                    }
+                    placeholder="Select check-in"
+                  />
+                  <DatePicker
+                    label="CHECK-OUT DATE"
+                    date={formData.checkout ? parseISO(formData.checkout) : undefined}
+                    onDateChange={(d) =>
+                      setFormData((prev) => ({ ...prev, checkout: d ? format(d, "yyyy-MM-dd") : "" }))
+                    }
+                    placeholder="Select check-out"
+                  />
                 </div>
 
-                <div>
-                  <label className="text-label text-forest/60">ROOM PREFERENCE</label>
-                  <Select
-                    value={formData.room}
-                    onValueChange={(val) => setFormData({ ...formData, room: val })}
-                  >
-                    <SelectTrigger className="mt-2 py-3">
-                      <SelectValue placeholder="Select a room" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CONTACT_PAGE.roomOptions.map((opt) => (
-                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <CustomSelect
+                  label="ROOM PREFERENCE"
+                  name="room"
+                  value={formData.room || undefined}
+                  onValueChange={(val) => setFormData({ ...formData, room: val })}
+                  options={roomOptions}
+                  placeholder="Select a room"
+                />
 
-                <div>
-                  <label htmlFor="message" className="text-label text-forest/60">SPECIAL REQUESTS / NOTES</label>
+                <FormField htmlFor="message" label="SPECIAL REQUESTS / NOTES">
                   <textarea
                     id="message"
                     name="message"
@@ -226,7 +206,7 @@ export default function ContactPage() {
                     className="mt-2 w-full resize-none border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
                     placeholder="Dietary preferences, arrival time, or experience requests"
                   />
-                </div>
+                </FormField>
 
                 {error && <p className="text-body-sm text-terracotta">{error}</p>}
 

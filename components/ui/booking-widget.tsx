@@ -2,14 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
+import { format, parseISO, startOfDay } from "date-fns";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+import { CustomSelect } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { calculateNights, getTomorrowISO, getNDaysLaterISO } from "@/lib/date";
 
@@ -27,7 +23,6 @@ export function BookingWidget({
 }) {
   const router = useRouter();
 
-  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const defaultCheckIn = useMemo(() => getTomorrowISO(), []);
   const defaultCheckOut = useMemo(() => getNDaysLaterISO(3, defaultCheckIn), [defaultCheckIn]);
 
@@ -49,88 +44,66 @@ export function BookingWidget({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (checkIn) params.set("checkin", checkIn);
-    if (checkOut) params.set("checkout", checkOut);
+    params.set("checkin", checkIn);
+    params.set("checkout", checkOut);
     params.set("guests", guests);
     params.set("rooms", roomsCount);
     router.push(`/stay?${params.toString()}`);
   }
 
+  const guestOptions = ["1 Adult", "2 Adults", "3 Adults", "4 Adults"].map((opt) => ({
+    label: opt,
+    value: opt,
+  }));
+  const roomOptions = ["1 Room", "2 Rooms", "3 Rooms"].map((opt) => ({ label: opt, value: opt }));
+
   const fields: React.ReactNode[] = [
     <div key="checkin" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
-      <label htmlFor="booking-checkin" className="text-label text-forest/60">
-        CHECK-IN
-      </label>
-      <input
-        id="booking-checkin"
-        type="date"
-        min={todayISO}
-        value={checkIn}
-        onChange={(e) => handleCheckInChange(e.target.value)}
-        className="mt-2 block w-full bg-transparent text-body text-forest focus:outline-none"
+      <label className="text-label text-forest/60">CHECK-IN</label>
+      <DatePicker
+        date={checkIn ? parseISO(checkIn) : undefined}
+        onDateChange={(d) => {
+          if (d) handleCheckInChange(format(d, "yyyy-MM-dd"));
+        }}
+        placeholder="Select check-in"
+        minDate={startOfDay(new Date())}
       />
     </div>,
     <div key="checkout" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
       <div className="flex items-center justify-between">
-        <label htmlFor="booking-checkout" className="text-label text-forest/60">
-          CHECK-OUT
-        </label>
+        <label className="text-label text-forest/60">CHECK-OUT</label>
         {nights > 0 && (
           <span className="text-[11px] font-sans font-medium uppercase text-terracotta">
             {nights} {nights === 1 ? "Night" : "Nights"}
           </span>
         )}
       </div>
-      <input
-        id="booking-checkout"
-        type="date"
-        min={checkIn ? getNDaysLaterISO(1, checkIn) : todayISO}
-        value={checkOut}
-        onChange={(e) => setCheckOut(e.target.value)}
-        className="mt-2 block w-full bg-transparent text-body text-forest focus:outline-none"
+      <DatePicker
+        date={checkOut ? parseISO(checkOut) : undefined}
+        onDateChange={(d) => {
+          if (d) setCheckOut(format(d, "yyyy-MM-dd"));
+        }}
+        placeholder="Select check-out"
+        minDate={checkIn ? parseISO(getNDaysLaterISO(1, checkIn)) : startOfDay(new Date())}
       />
     </div>,
     <div key="guests" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
-      <label className="text-label text-forest/60">
-        GUESTS
-      </label>
-      <Select
+      <CustomSelect
+        label="GUESTS"
         value={guests}
         onValueChange={setGuests}
-      >
-        <SelectTrigger className="mt-2">
-          <SelectValue placeholder="Select guests" />
-        </SelectTrigger>
-        <SelectContent>
-          {["1 Adult", "2 Adults", "3 Adults", "4 Adults"].map(
-            (opt) => (
-              <SelectItem key={opt} value={opt}>
-                {opt}
-              </SelectItem>
-            )
-          )}
-        </SelectContent>
-      </Select>
+        options={guestOptions}
+        placeholder="Select guests"
+      />
     </div>,
     <div key="rooms" className="flex-1 px-6 py-4">
-      <label className="text-label text-forest/60">
-        ROOMS
-      </label>
-      <Select
+      <CustomSelect
+        label="ROOMS"
         value={roomsCount}
         onValueChange={setRoomsCount}
-      >
-        <SelectTrigger className="mt-2">
-          <SelectValue placeholder="Select rooms" />
-        </SelectTrigger>
-        <SelectContent>
-          {["1 Room", "2 Rooms", "3 Rooms"].map((opt) => (
-            <SelectItem key={opt} value={opt}>
-              {opt}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        options={roomOptions}
+        placeholder="Select rooms"
+      />
     </div>,
     <div key="submit" className="flex flex-1 items-center justify-end px-6 py-4 md:justify-center md:border-l md:border-forest/10">
       <Button type="submit" variant="primary" className="w-full md:w-auto">

@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BRAND_NAME, BOOKING_CTA, NAV_ITEMS } from "@/lib/constants";
+import { BRAND_NAME, BOOKING_CTA } from "@/lib/constants";
+import { NAV_LINKS } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 
 /**
@@ -66,7 +67,7 @@ export function MobileNav({
         className="flex flex-1 flex-col justify-center gap-2 px-6"
         aria-label="Mobile navigation"
       >
-        {NAV_ITEMS.map((item, i) => (
+        {NAV_LINKS.map((item, i) => (
           <Link
             key={item.href}
             href={item.href}

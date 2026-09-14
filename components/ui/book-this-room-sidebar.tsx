@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
+import { format, parseISO, startOfDay } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { calculateNights, getTomorrowISO, getNDaysLaterISO } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
 
@@ -15,7 +17,6 @@ export function BookThisRoomSidebar({
 }) {
   const router = useRouter();
 
-  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const defaultCheckIn = useMemo(() => getTomorrowISO(), []);
   const defaultCheckOut = useMemo(() => getNDaysLaterISO(3, defaultCheckIn), [defaultCheckIn]);
 
@@ -35,8 +36,8 @@ export function BookThisRoomSidebar({
 
   const handleBookNow = () => {
     const params = new URLSearchParams();
-    if (checkIn) params.set("checkin", checkIn);
-    if (checkOut) params.set("checkout", checkOut);
+    params.set("checkin", checkIn);
+    params.set("checkout", checkOut);
     params.set("room", roomName);
     router.push(`/contact?${params.toString()}`);
   };
@@ -48,37 +49,33 @@ export function BookThisRoomSidebar({
 
       <div className="mt-6 space-y-4">
         <div>
-          <label htmlFor="sidebar-checkin" className="text-label text-forest/60">
-            CHECK-IN
-          </label>
-          <input
-            id="sidebar-checkin"
-            type="date"
-            min={todayISO}
-            value={checkIn}
-            onChange={(e) => handleCheckInChange(e.target.value)}
-            className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
+          <label className="text-label text-forest/60">CHECK-IN</label>
+          <DatePicker
+            date={checkIn ? parseISO(checkIn) : undefined}
+            onDateChange={(d) => {
+              if (d) handleCheckInChange(format(d, "yyyy-MM-dd"));
+            }}
+            placeholder="Select check-in"
+            minDate={startOfDay(new Date())}
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between">
-            <label htmlFor="sidebar-checkout" className="text-label text-forest/60">
-              CHECK-OUT
-            </label>
+            <label className="text-label text-forest/60">CHECK-OUT</label>
             {nights > 0 && (
               <span className="text-[11px] font-sans font-medium uppercase text-terracotta">
                 {nights} {nights === 1 ? "Night" : "Nights"}
               </span>
             )}
           </div>
-          <input
-            id="sidebar-checkout"
-            type="date"
-            min={checkIn ? getNDaysLaterISO(1, checkIn) : todayISO}
-            value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)}
-            className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
+          <DatePicker
+            date={checkOut ? parseISO(checkOut) : undefined}
+            onDateChange={(d) => {
+              if (d) setCheckOut(format(d, "yyyy-MM-dd"));
+            }}
+            placeholder="Select check-out"
+            minDate={checkIn ? parseISO(getNDaysLaterISO(1, checkIn)) : startOfDay(new Date())}
           />
         </div>
       </div>

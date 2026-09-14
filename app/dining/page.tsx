@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { format, parseISO } from "date-fns";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { CustomSelect } from "@/components/ui/select";
+import { FormField } from "@/components/ui/form-field";
 import { SiteImage } from "@/components/ui/site-image";
-import { DINING } from "@/lib/constants";
+import {
+  MORA_BODY,
+  MORA_HEADLINE,
+  MORA_MEAL_SLOTS,
+  MORA_RESTAURANT_NAME,
+  MORA_SAMPLE_MENU,
+  MENU_CATEGORY_LABELS,
+} from "@/data/dining";
+import { formatINRWhole } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
 
 export default function DiningPage() {
@@ -30,6 +34,19 @@ export default function DiningPage() {
   const [resSuccess, setResSuccess] = useState(false);
   const [resError, setResError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const timeSlotOptions = MORA_MEAL_SLOTS.flatMap((slot) =>
+    slot.reservationTimes.map((time) => ({ label: time, value: time }))
+  );
+
+  const menuSections = (
+    Object.entries(MENU_CATEGORY_LABELS) as [keyof typeof MENU_CATEGORY_LABELS, string][]
+  )
+    .map(([category, title]) => ({
+      title,
+      items: MORA_SAMPLE_MENU.filter((item) => item.category === category),
+    }))
+    .filter((section) => section.items.length > 0);
 
   const handleTableSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +86,7 @@ export default function DiningPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-forest/80 via-forest/30 to-transparent" aria-hidden="true" />
         <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40">
           <h1 className="text-display-xl whitespace-pre-line text-ivory">
-            {DINING.headline}
+            {MORA_HEADLINE}
           </h1>
         </div>
       </section>
@@ -79,18 +96,18 @@ export default function DiningPage() {
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 px-6 md:grid-cols-12 md:px-12">
           {/* Left — body text + hours */}
           <SectionReveal className="md:col-span-6">
-            <p className="text-body-lg text-charcoal">{DINING.body}</p>
+            <p className="text-body-lg text-charcoal">{MORA_BODY}</p>
             <p className="mt-4 font-serif text-[28px] font-medium leading-[1.2] tracking-[0.05em] text-forest">
-              {DINING.restaurantName}
+              {MORA_RESTAURANT_NAME}
             </p>
 
             <div className="mt-12">
               <h2 className="text-label text-terracotta">OPENING HOURS</h2>
               <dl className="mt-6 space-y-4">
-                {DINING.hours.map((h) => (
-                  <div key={h.label} className="flex items-baseline justify-between border-b border-forest/10 pb-4">
-                    <dt className="text-body font-medium text-forest">{h.label}</dt>
-                    <dd className="text-body-sm text-charcoal">{h.time}</dd>
+                {MORA_MEAL_SLOTS.map((slot) => (
+                  <div key={slot.id} className="flex items-baseline justify-between border-b border-forest/10 pb-4">
+                    <dt className="text-body font-medium text-forest">{slot.label}</dt>
+                    <dd className="text-body-sm text-charcoal">{slot.timeRange}</dd>
                   </div>
                 ))}
               </dl>
@@ -126,22 +143,22 @@ export default function DiningPage() {
           </SectionReveal>
 
           <div className="mt-16 space-y-16">
-            {DINING.categories.map((cat) => (
-              <SectionReveal key={cat.title}>
+            {menuSections.map((section) => (
+              <SectionReveal key={section.title}>
                 <h3 className="border-b border-forest/20 pb-3 text-label tracking-widest text-terracotta">
-                  {cat.title}
+                  {section.title}
                 </h3>
                 <dl className="mt-6 space-y-6">
-                  {cat.items.map((item) => (
-                    <div key={item.dish} className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
+                  {section.items.map((item) => (
+                    <div key={item.id} className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
                       <div>
-                        <dt className="text-display-sm text-forest">{item.dish}</dt>
+                        <dt className="text-display-sm text-forest">{item.name}</dt>
                         {item.description && (
                           <dd className="mt-1 text-body-sm text-charcoal/80">{item.description}</dd>
                         )}
                       </div>
                       <dd className="mt-2 font-serif text-[20px] text-terracotta sm:mt-0 sm:pl-6">
-                        {item.price}
+                        {formatINRWhole(item.price)}
                       </dd>
                     </div>
                   ))}
@@ -175,8 +192,7 @@ export default function DiningPage() {
             ) : (
               <form onSubmit={handleTableSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label htmlFor="res-name" className="text-label text-forest/60">YOUR NAME</label>
+                  <FormField htmlFor="res-name" label="YOUR NAME">
                     <input
                       id="res-name"
                       type="text"
@@ -186,9 +202,8 @@ export default function DiningPage() {
                       className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
                       placeholder="Name"
                     />
-                  </div>
-                  <div>
-                    <label htmlFor="res-email" className="text-label text-forest/60">EMAIL ADDRESS</label>
+                  </FormField>
+                  <FormField htmlFor="res-email" label="EMAIL ADDRESS">
                     <input
                       id="res-email"
                       type="email"
@@ -198,12 +213,11 @@ export default function DiningPage() {
                       className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
                       placeholder="you@email.com"
                     />
-                  </div>
+                  </FormField>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  <div>
-                    <label htmlFor="res-phone" className="text-label text-forest/60">PHONE</label>
+                  <FormField htmlFor="res-phone" label="PHONE">
                     <input
                       id="res-phone"
                       type="tel"
@@ -213,32 +227,26 @@ export default function DiningPage() {
                       className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
                       placeholder="+91 …"
                     />
-                  </div>
-                  <div>
-                    <DatePicker
-                      label="DATE"
-                      date={tableForm.date}
-                      onDateChange={(val) => setTableForm({ ...tableForm, date: val })}
-                      placeholder="Select date"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-label text-forest/60">TIME SLOT</label>
-                    <Select
-                      value={tableForm.timeSlot}
-                      onValueChange={(val) => setTableForm({ ...tableForm, timeSlot: val })}
-                    >
-                      <SelectTrigger className="mt-2">
-                        <SelectValue placeholder="Select a time slot" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Breakfast (8:30 AM)">Breakfast (8:30 AM)</SelectItem>
-                        <SelectItem value="Lunch (1:00 PM)">Lunch (1:00 PM)</SelectItem>
-                        <SelectItem value="Dinner (7:30 PM)">Dinner (7:30 PM)</SelectItem>
-                        <SelectItem value="Late Dinner (9:00 PM)">Late Dinner (9:00 PM)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  </FormField>
+                  <DatePicker
+                    label="DATE"
+                    date={tableForm.date ? parseISO(tableForm.date) : undefined}
+                    onDateChange={(d) =>
+                      setTableForm((prev) => ({
+                        ...prev,
+                        date: d ? format(d, "yyyy-MM-dd") : "",
+                      }))
+                    }
+                    placeholder="Select date"
+                  />
+                  <CustomSelect
+                    label="TIME SLOT"
+                    name="timeSlot"
+                    value={tableForm.timeSlot}
+                    onValueChange={(val) => setTableForm((prev) => ({ ...prev, timeSlot: val }))}
+                    options={timeSlotOptions}
+                    placeholder="Select a time slot"
+                  />
                 </div>
 
                 {resError && <p className="text-body-sm text-terracotta">{resError}</p>}

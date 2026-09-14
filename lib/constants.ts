@@ -16,35 +16,9 @@ export const CONTACT = {
   airportDistance: "42 km from Cochin International Airport (COK) — ~60 mins by car",
 } as const;
 
-// ── Navigation ───────────────────────────────────────────────────────────────
-export const NAV_ITEMS = [
-  { label: "Stay", href: "/stay" },
-  { label: "Dining", href: "/dining" },
-  { label: "Experiences", href: "/experiences" },
-  { label: "Our Story", href: "/our-story" },
-  { label: "Journal", href: "/journal" },
-] as const;
-
 export const BOOKING_CTA = "BOOK YOUR STAY";
 
-// ── Footer ───────────────────────────────────────────────────────────────────
-export const FOOTER_NAV = [
-  { label: "Stay", href: "/stay" },
-  { label: "Dining", href: "/dining" },
-  { label: "Experiences", href: "/experiences" },
-  { label: "Our Story", href: "/our-story" },
-  { label: "Journal", href: "/journal" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Contact", href: "/contact" },
-] as const;
-
 export const COPYRIGHT = "© 2026 Aurelia House. All rights reserved.";
-
-// ── Social ────────────────────────────────────────────────────────────────────
-export const SOCIAL = {
-  instagram: "https://www.instagram.com/aureliahouse.kochi",
-  facebook: "https://www.facebook.com/aureliahouse.kochi",
-} as const;
 
 // ── Home Page Copy ───────────────────────────────────────────────────────────
 export const HOME = {
@@ -103,57 +77,6 @@ export const ROOM_PAGE = {
   bookThisRoomCta: "BOOK THIS ROOM",
   notFoundHeadline: "ROOM NOT FOUND.",
   backCta: "BACK TO ALL ROOMS",
-} as const;
-
-// ── MORA Full Menu Breakdown ─────────────────────────────────────────────────
-export interface MenuCategory {
-  title: string;
-  items: { dish: string; description?: string; price: string }[];
-}
-
-export const DINING = {
-  headline: "KERALA-INSPIRED.\nCONTEMPORARY.\nLOCAL.",
-  restaurantName: "MORA",
-  body: "MORA brings together the flavours of Kerala's coast with a modern approach to dining.",
-  hours: [
-    { label: "BREAKFAST", time: "7:00 AM – 10:30 AM" },
-    { label: "LUNCH", time: "12:30 PM – 3:30 PM" },
-    { label: "DINNER", time: "7:00 PM – 11:00 PM" },
-  ] as const,
-  sampleMenuLabel: "FULL MENU",
-  categories: [
-    {
-      title: "STARTERS & SMALL PLATES",
-      items: [
-        { dish: "Malabar Pepper Prawns", description: "Seared tiger prawns, ground black pepper, crushed curry leaves", price: "₹850" },
-        { dish: "Charred Banana Blossom", description: "Braised flower blossom, mustard temper, coconut charcoal", price: "₹540" },
-        { dish: "Crab & Raw Mango Salad", description: "Fresh mud crab, green mango juliennes, shallot oil", price: "₹780" },
-      ],
-    },
-    {
-      title: "MAINS & CURRIES",
-      items: [
-        { dish: "Coconut Milk Fish Curry", description: "Line-caught Pearl Spot, poached in light coconut milk & kudampuli", price: "₹720" },
-        { dish: "Slow-Cooked Duck Roast", description: "Kuttanad duck leg, braised with fennel, star anise & caramelized shallots", price: "₹920" },
-        { dish: "Kerala Appam & Stew", description: "Lace rice crepe with roasted vegetable coconut stew", price: "₹480" },
-      ],
-    },
-    {
-      title: "DESSERTS",
-      items: [
-        { dish: "Tender Coconut Pudding", description: "Chilled young coconut gel, palm jaggery drizzle, toasted coconut", price: "₹320" },
-        { dish: "Jaggery & Cardamom Tart", description: "Organic cane jaggery, cardamom pod cream, cashewnut crust", price: "₹360" },
-      ],
-    },
-    {
-      title: "BEVERAGES & BOTANICALS",
-      items: [
-        { dish: "Curry Leaf & Gin Tonic", description: "Artisanal Indian gin, infused curry oil, tonic water", price: "₹650" },
-        { dish: "Tender Coconut Spritz", description: "Non-alcoholic fresh coconut water, mint, lime & elderflower", price: "₹350" },
-      ],
-    },
-  ] as MenuCategory[],
-  viewFullMenuCta: "VIEW FULL MENU",
 } as const;
 
 // ── Experiences Page ─────────────────────────────────────────────────────────

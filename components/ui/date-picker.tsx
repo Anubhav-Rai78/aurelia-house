@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, startOfDay } from "date-fns";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DateRange } from "react-day-picker";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
@@ -77,46 +77,72 @@ export function Calendar({
 
 // ── Single DatePicker Component ──────────────────────────────────────────────
 export interface DatePickerProps {
-  date?: string; // YYYY-MM-DD
-  onDateChange: (dateISO: string) => void;
+  /** Selected date. Pass `undefined` to show the placeholder. */
+  date?: Date;
+  /** Called when the user picks a day (or clears, where the picker allows it). */
+  onDateChange?: (date: Date | undefined) => void;
+  /** Field label rendered above the trigger (muted forest, `.text-label`). */
   label?: string;
+  /** Placeholder text shown when `date` is unset. */
   placeholder?: string;
+  /** Earliest selectable date (date granularity — time of day is ignored). */
   minDate?: Date;
+  /** Latest selectable date (date granularity — time of day is ignored). */
+  maxDate?: Date;
+  /** Custom per-day disable rule. */
+  disabledDays?: (date: Date) => boolean;
+  /** Error message rendered under the trigger. */
+  error?: string;
   className?: string;
 }
 
+/**
+ * Single-date picker. State is exchanged as `Date` objects — consumers with
+ * ISO-string state convert at the boundary (`parseISO` / `format(yyyy-MM-dd)`),
+ * keeping API/URL payloads byte-identical.
+ */
 export function DatePicker({
   date,
   onDateChange,
   label,
   placeholder = "Select date",
   minDate,
+  maxDate,
+  disabledDays,
+  error,
   className,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
-  const selectedDate = date ? parseISO(date) : undefined;
+  const handleSelect = React.useCallback(
+    (newDate: Date | undefined) => {
+      onDateChange?.(newDate);
+      if (newDate) setOpen(false);
+    },
+    [onDateChange]
+  );
 
-  const handleSelect = (newDate: Date | undefined) => {
-    if (!newDate) return;
-    const dateISO = format(newDate, "yyyy-MM-dd");
-    onDateChange(dateISO);
-    setOpen(false);
-  };
+  const isDayDisabled = React.useCallback(
+    (day: Date) => {
+      const dayStart = startOfDay(day);
+      if (minDate && dayStart < startOfDay(minDate)) return true;
+      if (maxDate && dayStart > startOfDay(maxDate)) return true;
+      return disabledDays?.(day) ?? false;
+    },
+    [minDate, maxDate, disabledDays]
+  );
 
   return (
     <div className={cn("relative w-full", className)}>
-      {label && (
-        <label className="text-label text-forest/60">{label}</label>
-      )}
+      {label && <label className="text-label text-forest/60">{label}</label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
             type="button"
             className="mt-2 flex w-full items-center justify-between border-b border-forest/15 bg-transparent py-2.5 text-left font-sans text-body text-forest focus:border-terracotta focus:outline-none transition-colors"
           >
-            <span className={cn(!selectedDate && "text-forest/40")}>
-              {selectedDate ? format(selectedDate, "MMM dd, yyyy") : placeholder}
+            <span className={cn(!date && "text-forest/40")}>
+              {date ? format(date, "MMM dd, yyyy") : placeholder}
             </span>
             <CalendarIcon className="h-4 w-4 text-terracotta opacity-80" />
           </button>
@@ -124,16 +150,18 @@ export function DatePicker({
         <PopoverContent>
           <Calendar
             mode="single"
-            selected={selectedDate}
+            selected={date}
             onSelect={handleSelect}
-            defaultMonth={selectedDate || undefined}
-            disabled={minDate ? { before: minDate } : undefined}
+            defaultMonth={date || undefined}
+            disabled={isDayDisabled}
           />
         </PopoverContent>
       </Popover>
+      {error && <p className="mt-1 text-body-sm text-terracotta">{error}</p>}
     </div>
   );
 }
+
 // ── Luxury DateRangePicker Component ─────────────────────────────────────────
 export interface DateRangePickerProps {
   checkIn?: string;

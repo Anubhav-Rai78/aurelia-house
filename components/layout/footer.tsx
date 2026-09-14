@@ -7,10 +7,9 @@ import {
   BRAND_NAME,
   CONTACT,
   COPYRIGHT,
-  FOOTER_NAV,
-  SOCIAL,
   TAGLINE,
 } from "@/lib/constants";
+import { FOOTER_LINKS, SOCIAL_LINKS } from "@/data/navigation";
 
 /**
  * Site footer — 4-column grid on desktop, stacked on mobile.
@@ -65,7 +64,7 @@ export function Footer() {
           <div>
             <h2 className="text-label text-ivory/50">Navigate</h2>
             <ul className="mt-4 space-y-3">
-              {FOOTER_NAV.map((item) => (
+              {FOOTER_LINKS.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -111,7 +110,7 @@ export function Footer() {
             <h2 className="text-label text-ivory/50">Follow</h2>
             <div className="mt-4 flex gap-4">
               <a
-                href={SOCIAL.instagram}
+                href={SOCIAL_LINKS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Aurelia House on Instagram"
@@ -120,7 +119,7 @@ export function Footer() {
                 <Instagram className="h-5 w-5" aria-hidden="true" />
               </a>
               <a
-                href={SOCIAL.facebook}
+                href={SOCIAL_LINKS.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Aurelia House on Facebook"

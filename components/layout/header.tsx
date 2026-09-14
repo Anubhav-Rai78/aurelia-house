@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { BRAND_NAME, BOOKING_CTA, NAV_ITEMS } from "@/lib/constants";
+import { BRAND_NAME, BOOKING_CTA } from "@/lib/constants";
+import { NAV_LINKS } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 
 function useScrolled(threshold = 40): boolean {
@@ -78,7 +79,7 @@ export function Header() {
 
           {/* Desktop nav (md and up) */}
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
-            {NAV_ITEMS.map((item) => {
+            {NAV_LINKS.map((item) => {
               const href = item.href as string;
               const isActive =
                 href === "/"
