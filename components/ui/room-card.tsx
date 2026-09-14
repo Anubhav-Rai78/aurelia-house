@@ -7,9 +7,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * RoomCard — reused on Home preview and Stay listing.
- * Image on top (aspect ratio overridable per page), then p-6 text block:
- * name → spec line → description → price → View Room button.
- * Cards separate via a 1px forest/10 hairline — never a shadow.
+ * Displays room specs, max guests badge, price per night, and Quick View link.
  */
 export function RoomCard({
   room,
@@ -22,21 +20,14 @@ export function RoomCard({
   showIndex?: boolean;
   className?: string;
 }) {
-  const imageCaption =
-    room.name === "Courtyard Room"
-      ? "Placeholder — Courtyard Room interior, calm and intimate, warm natural light"
-      : room.name === "Garden Suite"
-        ? "Placeholder — Garden Suite interior, natural textures, soft light"
-        : "Placeholder — Aurelia Suite interior, spacious, private terrace";
-
   return (
     <article
       className={cn(
-        "flex flex-col overflow-hidden rounded border border-forest/10 bg-ivory",
+        "flex flex-col overflow-hidden rounded border border-forest/10 bg-ivory transition-colors duration-300 hover:border-forest/30",
         className
       )}
     >
-      {/* Image with subtle hover zoom on the inner element */}
+      {/* Image with subtle hover zoom */}
       <Link
         href={`/stay/${room.slug}`}
         className="group relative block overflow-hidden"
@@ -51,32 +42,38 @@ export function RoomCard({
           <SiteImage
             src={room.image}
             alt={`${room.name} interior at Aurelia House, Fort Kochi`}
-            caption={imageCaption}
+            caption={`${room.name} interior`}
             aspectRatio="h-full w-full"
             className="h-full w-full"
             sizes="(min-width: 768px) 33vw, 100vw"
           />
         </div>
         {showIndex && (
-          <span className="absolute left-4 top-4 text-label text-ivory">
+          <span className="absolute left-4 top-4 rounded bg-forest/80 px-2 py-1 text-label text-ivory backdrop-blur-sm">
             {room.index}
           </span>
         )}
       </Link>
 
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="text-display-sm text-forest">{room.name}</h3>
+        <div className="flex items-start justify-between">
+          <h3 className="text-display-sm text-forest">{room.name}</h3>
+          <span className="text-[11px] font-sans uppercase tracking-wider text-forest/50">
+            Max {room.guests} Guests
+          </span>
+        </div>
+
         <p className="mt-2 text-body-sm text-forest/70">
           {room.size} · {room.bed} · {room.view}
         </p>
         <p className="mt-3 text-body text-charcoal">{room.description}</p>
-        <div className="mt-4 flex items-end justify-between gap-4">
+        <div className="mt-6 flex items-end justify-between gap-4">
           <span className="text-price text-terracotta">{room.priceDisplay}</span>
         </div>
         <Button
           href={`/stay/${room.slug}`}
           variant="secondary"
-          className="mt-4 w-full md:w-auto"
+          className="mt-4 w-full"
         >
           {STAY.viewRoomCta}
         </Button>

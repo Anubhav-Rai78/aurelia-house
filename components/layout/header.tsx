@@ -78,19 +78,25 @@ export function Header() {
 
           {/* Desktop nav (md and up) */}
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "py-1 text-label transition-colors duration-300 hover:opacity-70",
-                  pathname === item.href &&
-                    "border-b-2 border-terracotta pb-0.5"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const href = item.href as string;
+              const isActive =
+                href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "py-1 text-label transition-colors duration-300 hover:opacity-70",
+                    isActive && "border-b-2 border-terracotta pb-0.5 font-medium"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-4">

@@ -4,34 +4,31 @@ import { useState } from "react";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { FilterTabs } from "@/components/ui/filter-tabs";
 import { RoomCard } from "@/components/ui/room-card";
-import { BookingWidget } from "@/components/ui/booking-widget";
 import { rooms } from "@/data/rooms";
 import { STAY } from "@/lib/constants";
 
 const allTabs = ["All", "Courtyard", "Garden", "Suite"] as const;
 
-/**
- * /stay — Rooms listing page.
- * Filter tabs with sticky filter bar. Cards separate via 1px hairlines.
- * Optimised for portrait-mode room card images — no hard-crop.
- */
 export default function StayPage() {
   const [active, setActive] = useState<string>(allTabs[0]);
 
-  const filtered = active === "All" ? rooms : rooms.filter((r) => {
-    const name = r.name.toLowerCase();
-    return name.includes(active.toLowerCase());
-  });
+  const filtered =
+    active === "All"
+      ? rooms
+      : rooms.filter((r) => r.category.toLowerCase() === active.toLowerCase());
 
   return (
     <>
-      {/* Hero banner (no booking widget — that's only on Home) */}
-      <section className="bg-sand/30 pt-32 pb-16 md:pt-40 md:pb-[120px]">
+      {/* Hero banner */}
+      <section className="bg-sand/30 pb-16 pt-32 md:pb-[100px] md:pt-40">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <h1 className="text-display-lg whitespace-pre-line text-center text-forest">
               {STAY.headline}
             </h1>
+            <p className="mt-4 text-center text-body text-forest/70">
+              24 sanctuaries across 3 room categories in Fort Kochi, Kerala
+            </p>
           </SectionReveal>
         </div>
       </section>

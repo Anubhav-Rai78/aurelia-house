@@ -9,16 +9,12 @@ if (!fs.existsSync(TARGET_DIR)) {
   fs.mkdirSync(TARGET_DIR, { recursive: true });
 }
 
-const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
-if (!PEXELS_API_KEY) {
-  console.error("❌ PEXELS_API_KEY not found in environment. Add it to .env.local");
-  process.exit(1);
-}
+// User-supplied Pexels API Key
+const PEXELS_API_KEY = process.env.PEXELS_API_KEY || "r3UhpzMvRHBkgp32dtlkfQxsXnScG11DHpNJaFJ2butp3wZve4tJEEDg";
 
-// 18 required images — each with an optimised Pexels search query.
-// orientation: landscape (>3200 px wide) or portrait (>2400 px tall).
+// Comprehensive shot list for Aurelia House — luxury boutique hotel imagery
 const SHOT_LIST = [
-  // 1. Hero & Architecture
+  // Hero & Architecture
   {
     query: "luxury boutique hotel courtyard golden hour architecture warm light",
     filename: "hero-golden-hour.jpg",
@@ -50,7 +46,7 @@ const SHOT_LIST = [
     desc: "Our Story architecture — Kerala materials",
   },
 
-  // 2. Rooms
+  // Rooms
   {
     query: "boutique hotel bedroom linen natural sunlight calm warm interior design",
     filename: "room-courtyard.jpg",
@@ -76,7 +72,7 @@ const SHOT_LIST = [
     desc: "Rain shower detail — warm bathroom light",
   },
 
-  // 3. Dining / MORA
+  // Dining / MORA
   {
     query: "fine dining gourmet plated seafood coastal terracotta table luxury",
     filename: "dining-home.jpg",
@@ -108,7 +104,7 @@ const SHOT_LIST = [
     desc: "Spice counter — local produce, vibrant colour",
   },
 
-  // 4. Experiences
+  // Experiences
   {
     query: "kerala backwaters wooden canoe morning mist sunrise peaceful water",
     filename: "exp-backwaters.jpg",
@@ -133,6 +129,32 @@ const SHOT_LIST = [
     orientation: "portrait",
     desc: "Harbour sunset — golden light on water",
   },
+
+  // Additional Luxury Editorial Assets
+  {
+    query: "luxury hotel pool tropical palm trees warm sunset reflections",
+    filename: "pool-courtyard.jpg",
+    orientation: "landscape",
+    desc: "Courtyard pool reflection",
+  },
+  {
+    query: "fresh tropical fruit breakfast artisanal pastry wooden tray morning light",
+    filename: "dining-breakfast.jpg",
+    orientation: "portrait",
+    desc: "MORA breakfast spread",
+  },
+  {
+    query: "handcrafted cocktail ceramic glass warm bar lighting luxury hotel",
+    filename: "dining-cocktails.jpg",
+    orientation: "portrait",
+    desc: "MORA signature cocktails",
+  },
+  {
+    query: "fort kochi street colonial yellow building tropical trees daylight",
+    filename: "kochi-street-day.jpg",
+    orientation: "portrait",
+    desc: "Fort Kochi historic streets in daylight",
+  }
 ];
 
 async function downloadImage(url, filepath) {
@@ -152,7 +174,6 @@ async function main() {
   for (const item of SHOT_LIST) {
     const destPath = path.join(TARGET_DIR, item.filename);
 
-    // Skip if already downloaded
     if (fs.existsSync(destPath)) {
       const stat = fs.statSync(destPath);
       if (stat.size > 10_000) {
@@ -184,18 +205,13 @@ async function main() {
         continue;
       }
 
-      // Pick the photo with the largest width from top 3
       const best = data.photos.reduce((prev, curr) =>
-        (curr.width > prev.width ? curr : prev)
+        curr.width > prev.width ? curr : prev
       );
 
-      // Prefer original (uncropped, full res); fall back to large2x
       const photoUrl = best.src.original || best.src.large2x || best.src.large;
-      const sizeKB = ((best.width * best.height * 3) / 1024 / 1024).toFixed(0); // rough JPEG estimate
 
-      console.log(`   ⬇️  Downloading ${item.filename} (${best.width}×${best.height}, ~${sizeKB} KB)…`);
-      console.log(`   📸 Photo by ${best.photographer} on Pexels`);
-
+      console.log(`   ⬇️  Downloading ${item.filename} (${best.width}×${best.height})…`);
       await downloadImage(photoUrl, destPath);
       const saved = fs.statSync(destPath).size;
       console.log(`   ✅ Saved: ${item.filename} (${(saved / 1024).toFixed(0)} KB)\n`);
@@ -207,7 +223,7 @@ async function main() {
   }
 
   console.log("━".repeat(56));
-  console.log(`🎉 Done! ✅ ${ok}/${SHOT_LIST.length} succeeded, ❌ ${fail} failed`);
+  console.log(`🎉 Done! ✅ ${ok}/${SHOT_LIST.length} images ready.`);
   console.log("━".repeat(56));
 }
 

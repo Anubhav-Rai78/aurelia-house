@@ -10,7 +10,9 @@ import { experiences } from "@/data/experiences";
 import { HOME } from "@/lib/constants";
 
 export const metadata = {
-  title: "Aurelia House — Boutique Hotel in Fort Kochi",
+  title: "Aurelia House — Luxury Boutique Hotel in Fort Kochi",
+  description:
+    "A 24-room design-led boutique hotel in Fort Kochi, Kerala. Contemporary architecture, Kerala heritage, MORA dining and slow luxury.",
 };
 
 export default function HomePage() {
@@ -23,7 +25,7 @@ export default function HomePage() {
             <SiteImage
               src="/images/hero-golden-hour.jpg"
               alt="Aurelia House at golden hour — architecture-forward exterior in warm Kerala light"
-              caption="Cinematic exterior/interior of the hotel at golden hour, architecture-forward, Kerala materials visible"
+              caption="Cinematic exterior of Aurelia House at golden hour"
               aspectRatio="h-full w-full"
               className="h-full w-full"
               sizes="100vw"
@@ -68,7 +70,7 @@ export default function HomePage() {
               <SiteImage
                 src="/images/intro-courtyard.jpg"
                 alt="Quiet courtyard at Aurelia House — natural materials, dappled light"
-                caption="Architectural detail — courtyard or corridor, natural materials, quiet"
+                caption="Architectural detail — courtyard natural materials"
                 aspectRatio="h-full w-full"
                 className="h-full w-full"
                 sizes="(min-width: 768px) 42vw, 100vw"
@@ -97,6 +99,9 @@ export default function HomePage() {
             <h2 className="text-display-md text-center text-forest">
               {HOME.roomsHeadline}
             </h2>
+            <p className="mt-3 text-center text-body-sm text-forest/60">
+              24 design-led sanctuaries across three distinct room categories
+            </p>
           </SectionReveal>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
             {rooms.map((room, i) => (
@@ -121,20 +126,18 @@ export default function HomePage() {
       {/* ── Section 5: Dining ───────────────────────────────────────────── */}
       <section className="py-16 md:py-[120px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-12 px-6 md:grid-cols-12 md:px-12">
-          {/* Image — left side this time (alternating rhythm) */}
           <SectionReveal className="md:col-span-5">
             <div className="aspect-[4/5] overflow-hidden rounded">
               <SiteImage
                 src="/images/dining-home.jpg"
                 alt="Plated coastal dish from MORA, Aurelia House's restaurant"
-                caption="MORA restaurant interior or a plated signature dish"
+                caption="MORA signature coastal dish"
                 aspectRatio="h-full w-full"
                 className="h-full w-full"
                 sizes="(min-width: 768px) 42vw, 100vw"
               />
             </div>
           </SectionReveal>
-          {/* Text — right side */}
           <SectionReveal className="md:col-span-7">
             <h2 className="text-display-md whitespace-pre-line text-forest">
               {HOME.diningHeadline}

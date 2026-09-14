@@ -1,13 +1,13 @@
 import Link from "next/link";
+import { Clock, Users } from "lucide-react";
 import { SiteImage } from "@/components/ui/site-image";
 import type { Experience } from "@/data/experiences";
 import { cn } from "@/lib/utils";
 
 /**
  * ExperienceCard — two display modes:
- *   • `overlay` (Home teaser): title overlaid bottom-left on the image with a
- *     forest scrim. Alternating aspect ratios per card index.
- *   • `below` (Experiences page): full description + price beneath the image.
+ *   • `overlay` (Home teaser): title overlaid bottom-left on the image with a forest scrim.
+ *   • `below` (Experiences page): full description + price + duration beneath image.
  */
 export function ExperienceCard({
   experience,
@@ -20,20 +20,8 @@ export function ExperienceCard({
   mode?: "overlay" | "below";
   className?: string;
 }) {
-  // Alternating heights: cards 1 & 4 taller (aspect-[4/5] overlay / [3/4] below),
-  // cards 2 & 3 wider (aspect-[16/10]) — breaks the uniform grid monotony.
   const isAlt = index === 0 || index === 3;
   const aspect = mode === "overlay" ? (isAlt ? "aspect-[4/5]" : "aspect-[16/10]") : (isAlt ? "aspect-[3/4]" : "aspect-[16/10]");
-
-  const captions = [
-    "Placeholder — backwaters at sunrise, private boat, mist over water",
-    "Placeholder — Fort Kochi street at night, warm lantern light",
-    "Placeholder — cooking with a local chef, Kerala kitchen",
-    "Placeholder — harbour sunset cruise, golden light on water",
-  ];
-  const caption = captions[index] ?? captions[0];
-
-  const sizes = mode === "overlay" ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 50vw, 100vw";
 
   if (mode === "overlay") {
     return (
@@ -41,16 +29,20 @@ export function ExperienceCard({
         <SiteImage
           src={experience.image}
           alt={experience.title}
-          caption={caption}
+          caption={experience.title}
           aspectRatio="absolute inset-0 h-full w-full"
           className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-          sizes={sizes}
+          sizes="(min-width: 768px) 50vw, 100vw"
         />
-        {/* Forest scrim for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-forest/70 to-transparent" aria-hidden="true" />
-        <h3 className="absolute bottom-4 left-4 right-4 text-display-sm text-ivory">
-          {experience.title}
-        </h3>
+        <div className="absolute inset-0 bg-gradient-to-t from-forest/80 via-forest/30 to-transparent" aria-hidden="true" />
+        <div className="absolute bottom-4 left-4 right-4">
+          <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-sand">
+            {experience.duration}
+          </span>
+          <h3 className="mt-1 text-display-sm text-ivory">
+            {experience.title}
+          </h3>
+        </div>
       </article>
     );
   }
@@ -61,22 +53,37 @@ export function ExperienceCard({
         <SiteImage
           src={experience.image}
           alt={experience.title}
-          caption={caption}
+          caption={experience.title}
           aspectRatio="h-full w-full"
-          className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-          sizes={sizes}
+          className="h-full w-full transition-transform duration-500 ease-out hover:scale-[1.03]"
+          sizes="(min-width: 768px) 50vw, 100vw"
         />
       </div>
       <div className="flex flex-1 flex-col p-6">
-        <h2 className="text-display-sm text-forest">{experience.title}</h2>
+        <div className="flex items-center gap-4 text-[12px] text-forest/60">
+          <span className="flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" />
+            {experience.duration}
+          </span>
+          <span>·</span>
+          <span className="flex items-center gap-1">
+            <Users className="h-3.5 w-3.5" />
+            {experience.groupSize}
+          </span>
+        </div>
+
+        <h2 className="mt-2 text-display-sm text-forest">{experience.title}</h2>
         <p className="mt-2 text-body text-charcoal">{experience.description}</p>
-        <p className="mt-4 text-price text-terracotta">{experience.priceDisplay}</p>
-        <Link 
-          href={`/contact?experience=${experience.slug}`}
-          className="mt-4 text-body-sm text-terracotta underline decoration-terracotta/30 underline-offset-4 transition-colors hover:decoration-terracotta"
-        >
-          Enquire →
-        </Link>
+        
+        <div className="mt-6 flex items-center justify-between border-t border-forest/10 pt-4">
+          <span className="text-price text-terracotta">{experience.priceDisplay}</span>
+          <Link 
+            href={`/contact?experience=${experience.slug}`}
+            className="text-body-sm text-terracotta underline decoration-terracotta/30 underline-offset-4 transition-colors hover:decoration-terracotta"
+          >
+            Enquire & Reserve →
+          </Link>
+        </div>
       </div>
     </article>
   );

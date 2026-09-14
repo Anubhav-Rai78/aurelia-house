@@ -1,13 +1,3 @@
-// ─── AURELIA HOUSE — Supabase Database Types ────────────────────────────────
-// Hand-maintained to match supabase/migrations/00001_initial_aurelia_house.sql.
-// The hotel site uses two public tables:
-//   • contacts      — form submissions from /contact
-//   • reservations  — reservation requests from the booking flow
-//
-// Regenerate and replace this file wholesale with `supabase gen types` whenever
-// the schema grows (rooms inventory, journal articles, availability, etc.).
-// ──────────────────────────────────────────────────────────────────────────────
-
 export type Json =
   | string
   | number
@@ -63,6 +53,7 @@ export interface Database {
       reservations: {
         Row: {
           id: string
+          booking_code: string | null
           name: string
           email: string
           phone: string | null
@@ -76,6 +67,7 @@ export interface Database {
         }
         Insert: {
           id?: string
+          booking_code?: string | null
           name: string
           email: string
           phone?: string | null
@@ -89,6 +81,7 @@ export interface Database {
         }
         Update: {
           id?: string
+          booking_code?: string | null
           name?: string
           email?: string
           phone?: string | null
@@ -98,6 +91,45 @@ export interface Database {
           room?: string | null
           message?: string | null
           status?: ReservationStatus
+          created_at?: string
+        }
+        Relationships: []
+      }
+      mora_reservations: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          phone: string
+          date: string
+          time_slot: string
+          party_size: number
+          seating_preference: string | null
+          special_requests: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          phone: string
+          date: string
+          time_slot: string
+          party_size: number
+          seating_preference?: string | null
+          special_requests?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          phone?: string
+          date?: string
+          time_slot?: string
+          party_size?: number
+          seating_preference?: string | null
+          special_requests?: string | null
           created_at?: string
         }
         Relationships: []
@@ -118,9 +150,9 @@ export interface Database {
   }
 }
 
-// ── Convenience row types used across the codebase ───────────────────────────
 export type Contact = Database["public"]["Tables"]["contacts"]["Row"];
 export type ContactInsert = Database["public"]["Tables"]["contacts"]["Insert"];
 export type Reservation = Database["public"]["Tables"]["reservations"]["Row"];
-export type ReservationInsert =
-  Database["public"]["Tables"]["reservations"]["Insert"];
+export type ReservationInsert = Database["public"]["Tables"]["reservations"]["Insert"];
+export type MoraReservation = Database["public"]["Tables"]["mora_reservations"]["Row"];
+export type MoraReservationInsert = Database["public"]["Tables"]["mora_reservations"]["Insert"];

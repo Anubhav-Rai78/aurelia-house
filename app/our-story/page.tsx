@@ -3,34 +3,37 @@ import { SiteImage } from "@/components/ui/site-image";
 import { OUR_STORY } from "@/lib/constants";
 
 export const metadata = {
-  title: "Our Story — A Sense of Place",
-  description: "Aurelia House was imagined as a modern retreat rooted in the character of Fort Kochi.",
+  title: "Our Story — Aurelia House",
+  description: "Aurelia House was imagined as a modern retreat rooted in the architectural character and slow rhythm of Fort Kochi.",
 };
 
 export default function OurStoryPage() {
   return (
     <>
-      {/* Hero — large headline over atmospheric portrait image */}
-      <section className="bg-sand/30 pt-32 pb-16 md:pt-40 md:pb-[80px]">
+      {/* Hero */}
+      <section className="bg-sand/30 pb-16 pt-32 md:pb-[80px] md:pt-40">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <h1 className="text-display-lg whitespace-pre-line text-center text-forest">
               {OUR_STORY.headline}
             </h1>
+            <p className="mt-4 text-center text-body text-forest/70">
+              A 24-room design-led retreat combining Kerala heritage with quiet, editorial luxury
+            </p>
           </SectionReveal>
         </div>
       </section>
 
-      {/* Main body — 12-col grid, image left + text right */}
+      {/* Main body — 12-col grid */}
       <section className="py-16 md:py-[120px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 px-6 md:grid-cols-12 md:px-12">
-          {/* Image — left, portrait */}
+          {/* Image — left */}
           <SectionReveal className="md:col-span-5">
             <div className="aspect-[4/5] overflow-hidden rounded">
               <SiteImage
                 src="/images/story-main.jpg"
                 alt="Architectural detail at Aurelia House — natural materials and a sense of place"
-                caption="Architectural / founder detail — natural materials, authentic sense of place"
+                caption="Natural materials and authentic sense of place"
                 aspectRatio="h-full w-full"
                 className="h-full w-full"
                 sizes="(min-width: 768px) 42vw, 100vw"
@@ -40,11 +43,15 @@ export default function OurStoryPage() {
 
           {/* Text — right side */}
           <SectionReveal className="md:col-span-7 md:col-start-7 md:row-start-1">
-            {OUR_STORY.paragraphs.map((p, i) => (
-              <p key={i} className="text-body-lg text-charcoal">
-                {p}
-              </p>
-            ))}
+            <span className="text-label text-terracotta">FOUNDER STATEMENT</span>
+            <h2 className="mt-2 text-display-md text-forest">CHARACTER OVER CONVENTION.</h2>
+            <div className="mt-6 space-y-6">
+              {OUR_STORY.paragraphs.map((p, i) => (
+                <p key={i} className="text-body-lg text-charcoal leading-relaxed">
+                  {p}
+                </p>
+              ))}
+            </div>
           </SectionReveal>
         </div>
 
@@ -55,43 +62,32 @@ export default function OurStoryPage() {
           </blockquote>
         </SectionReveal>
 
-        {/* Subsections — horizontal strip with cards */}
+        {/* Subsections — 4 Pillars */}
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
               {OUR_STORY.subsections.map((sub, i) => {
-                const captions = [
-                  "Placeholder — architectural detail, contemporary design, Kerala materials",
-                  "Placeholder — the founder in a calm, natural setting",
-                  "Placeholder — the hotel's philosophy in visual form, quiet spaces",
-                  "Placeholder — local cultural element woven into the hotel's design",
-                ];
                 const images = [
                   "/images/story-architecture.jpg",
                   "/images/story-main.jpg",
                   "/images/intro-courtyard.jpg",
                   "/images/kochi-fishing-nets.jpg",
                 ];
-                const alts = [
-                  "Kerala architecture — terracotta, wood and contemporary design",
-                  "The story behind Aurelia House, told through natural materials",
-                  "Quiet spaces and the hotel's philosophy made visible",
-                  "Local culture woven into the hotel's design",
-                ];
                 return (
                   <article key={sub.label} className="flex flex-col overflow-hidden rounded border border-forest/10 bg-ivory">
                     <div className="aspect-[3/4] overflow-hidden">
                       <SiteImage
                         src={images[i]}
-                        alt={alts[i]}
-                        caption={captions[i]}
+                        alt={sub.label}
+                        caption={sub.label}
                         aspectRatio="h-full w-full"
                         className="h-full w-full"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                       />
                     </div>
                     <div className="p-6">
-                      <h2 className="text-label text-terracotta">{sub.label}</h2>
+                      <h3 className="text-label text-terracotta">{sub.label}</h3>
+                      <p className="mt-2 text-body-sm text-charcoal/80">{sub.desc}</p>
                     </div>
                   </article>
                 );

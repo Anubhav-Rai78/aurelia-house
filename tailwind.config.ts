@@ -11,6 +11,7 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./data/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
   ],
   // Safelist button text colors to prevent JIT from stripping them
   safelist: [
@@ -41,6 +42,15 @@ const config: Config = {
       },
       screens: {
         xl: "1440px",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.3s ease-out forwards",
       },
     },
   },

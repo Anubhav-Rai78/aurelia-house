@@ -4,20 +4,23 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
-import { CONTACT_PAGE } from "@/lib/constants";
+import { CONTACT_PAGE, CONTACT } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
+import { MapPin, Phone, Mail, Navigation, CheckCircle2 } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const [bookingCode, setBookingCode] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
   const searchParams = useSearchParams();
 
-  // Pre-populate from URL params
   const [formData, setFormData] = useState({
     checkin: searchParams.get("checkin") || "",
     checkout: searchParams.get("checkout") || "",
-    room: searchParams.get("room") || "",
-    guests: "2 Adults",
+    room: searchParams.get("room") || "Select a room",
+    guests: searchParams.get("guests") || "2 Adults",
     name: "",
     email: "",
     phone: "",
@@ -35,39 +38,55 @@ export default function ContactPage() {
       setFormData((prev) => ({ ...prev, room: searchParams.get("room")! }));
     }
     if (searchParams.get("experience")) {
-      const experienceSlug = searchParams.get("experience")!;
-      setFormData((prev) => ({ 
-        ...prev, 
-        message: `I'm interested in reserving the "${experienceSlug}" experience. Please share more details.`
+      const exp = searchParams.get("experience")!;
+      setFormData((prev) => ({
+        ...prev,
+        message: `I would like to reserve the "${exp}" experience during my stay.`,
       }));
     }
   }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(false);
+    setError("");
     setSubmitted(false);
+    setSubmitting(true);
 
-    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const formPayload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      guests: formData.guests,
+      checkin: formData.checkin,
+      checkout: formData.checkout,
+      room: formData.room === "Select a room" ? "Courtyard Room" : formData.room,
+      message: formData.message,
+    };
 
     try {
-      await apiClient("/api/contact", {
+      const res: any = await apiClient("/api/reservation", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify(formPayload),
       });
+
       setSubmitted(true);
-      e.currentTarget.reset();
-    } catch {
-      setError(true);
+      setBookingCode(res?.bookingCode || "AH-RESERVATION");
+    } catch (err: any) {
+      setError(err.message || CONTACT_PAGE.errorMessage);
+    } finally {
+      setSubmitting(false);
     }
   }
 
   return (
     <>
-      <section className="bg-sand/30 pt-32 pb-16 md:pt-40 md:pb-[80px]">
+      <section className="bg-sand/30 pb-16 pt-32 md:pb-[80px] md:pt-40">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <h1 className="text-display-lg text-center text-forest">{CONTACT_PAGE.headline}</h1>
+            <p className="mt-3 text-center text-body text-forest/70">
+              Complete your reservation request or connect directly with our Fort Kochi host team
+            </p>
           </SectionReveal>
         </div>
       </section>
@@ -75,114 +94,182 @@ export default function ContactPage() {
       <section className="py-16 md:py-[80px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 px-6 md:grid-cols-12 md:px-12">
           <SectionReveal className="md:col-span-7">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="text-label text-forest/60">NAME</label>
-                  <input id="name" name="name" type="text" required
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none focus:border-terracotta transition-colors"
-                    placeholder="Your name" />
+            {submitted ? (
+              <div className="rounded border border-forest/10 bg-ivory p-8 text-center">
+                <CheckCircle2 className="mx-auto h-12 w-12 text-terracotta" />
+                <span className="mt-4 block text-label text-terracotta">CONFIRMATION RECEIVED</span>
+                <h2 className="mt-2 text-display-md text-forest">YOUR ROOM IS WAITING.</h2>
+                <p className="mt-4 text-body text-charcoal">
+                  Thank you, <span className="font-medium">{formData.name}</span>. Your reservation request has been registered under reference code:
+                </p>
+                <div className="my-6 inline-block rounded bg-forest/5 px-6 py-3 font-mono text-[20px] font-bold text-forest">
+                  {bookingCode}
                 </div>
-                <div>
-                  <label htmlFor="email" className="text-label text-forest/60">EMAIL</label>
-                  <input id="email" name="email" type="email" required
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none focus:border-terracotta transition-colors"
-                    placeholder="you@email.com" />
-                </div>
+                <p className="text-body-sm text-forest/70">
+                  Our reservations team will send your formal confirmation and payment details to <span className="font-medium text-forest">{formData.email}</span> within 24 hours.
+                </p>
               </div>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
-                  <label htmlFor="phone" className="text-label text-forest/60">PHONE</label>
-                  <input id="phone" name="phone" type="tel"
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none focus:border-terracotta transition-colors"
-                    placeholder="+91 …" />
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label htmlFor="name" className="text-label text-forest/60">YOUR NAME *</label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
+                      placeholder="Full Name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="text-label text-forest/60">EMAIL ADDRESS *</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
+                      placeholder="you@email.com"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label htmlFor="phone" className="text-label text-forest/60">PHONE NUMBER</label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
+                      placeholder="+91 …"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="guests" className="text-label text-forest/60">GUESTS</label>
+                    <select
+                      id="guests"
+                      name="guests"
+                      value={formData.guests}
+                      onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+                      className="mt-2 w-full cursor-pointer border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                    >
+                      {CONTACT_PAGE.guestOptions.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label htmlFor="checkin" className="text-label text-forest/60">CHECK-IN DATE</label>
+                    <input
+                      id="checkin"
+                      name="checkin"
+                      type="date"
+                      value={formData.checkin}
+                      onChange={(e) => setFormData({ ...formData, checkin: e.target.value })}
+                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="checkout" className="text-label text-forest/60">CHECK-OUT DATE</label>
+                    <input
+                      id="checkout"
+                      name="checkout"
+                      type="date"
+                      value={formData.checkout}
+                      onChange={(e) => setFormData({ ...formData, checkout: e.target.value })}
+                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label htmlFor="guests" className="text-label text-forest/60">GUESTS</label>
-                  <select id="guests" name="guests"
-                    className="mt-2 w-full cursor-pointer border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none">
-                    {CONTACT_PAGE.guestOptions.map((opt) => (
+                  <label htmlFor="room" className="text-label text-forest/60">ROOM PREFERENCE</label>
+                  <select
+                    id="room"
+                    name="room"
+                    value={formData.room}
+                    onChange={(e) => setFormData({ ...formData, room: e.target.value })}
+                    className="mt-2 w-full cursor-pointer border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                  >
+                    {CONTACT_PAGE.roomOptions.map((opt) => (
                       <option key={opt} value={opt}>{opt}</option>
                     ))}
                   </select>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label htmlFor="checkin" className="text-label text-forest/60">CHECK-IN</label>
-                  <input 
-                    id="checkin" 
-                    name="checkin" 
-                    type="date"
-                    defaultValue={formData.checkin}
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none" 
+                  <label htmlFor="message" className="text-label text-forest/60">SPECIAL REQUESTS / NOTES</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="mt-2 w-full resize-none border-b border-forest/15 bg-transparent py-3 text-body text-forest transition-colors focus:border-terracotta focus:outline-none"
+                    placeholder="Dietary preferences, arrival time, or experience requests"
                   />
                 </div>
-                <div>
-                  <label htmlFor="checkout" className="text-label text-forest/60">CHECK-OUT</label>
-                  <input 
-                    id="checkout" 
-                    name="checkout" 
-                    type="date"
-                    defaultValue={formData.checkout}
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none" 
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label htmlFor="room" className="text-label text-forest/60">ROOM PREFERENCE</label>
-                <select 
-                  id="room" 
-                  name="room"
-                  defaultValue={formData.room}
-                  className="mt-2 w-full cursor-pointer border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none"
-                >
-                  {CONTACT_PAGE.roomOptions.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              </div>
+                {error && <p className="text-body-sm text-terracotta">{error}</p>}
 
-              <div>
-                <label htmlFor="message" className="text-label text-forest/60">MESSAGE</label>
-                <textarea id="message" name="message" rows={4}
-                  className="mt-2 w-full resize-none border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none focus:border-terracotta transition-colors"
-                  placeholder="Any special requests or questions" />
-              </div>
-
-              {submitted && <p className="text-body-sm text-forest">{CONTACT_PAGE.successMessage}</p>}
-              {error && <p className="text-body-sm text-terracotta">{CONTACT_PAGE.errorMessage}</p>}
-
-              <Button type="submit" variant="primary" className="w-full md:w-auto">
-                {CONTACT_PAGE.submitCta}
-              </Button>
-            </form>
+                <Button type="submit" variant="primary" className="w-full md:w-auto" disabled={submitting}>
+                  {submitting ? "SUBMITTING..." : CONTACT_PAGE.submitCta}
+                </Button>
+              </form>
+            )}
           </SectionReveal>
 
+          {/* Contact Details & Directions */}
           <SectionReveal className="md:col-span-5">
-            <div className="md:sticky md:top-32">
-              <h2 className="text-label text-forest/60">GET IN TOUCH</h2>
+            <div className="rounded border border-forest/10 bg-ivory p-8 md:sticky md:top-32">
+              <h2 className="text-label text-terracotta">GET IN TOUCH</h2>
               <div className="mt-6 space-y-6">
                 <div>
-                  <h3 className="text-body font-medium text-forest">Address</h3>
-                  <address className="mt-2 text-body-sm text-charcoal not-italic leading-relaxed">
+                  <h3 className="flex items-center gap-2 text-body font-medium text-forest">
+                    <MapPin className="h-4 w-4 text-terracotta" /> Address
+                  </h3>
+                  <address className="mt-2 text-body-sm not-italic leading-relaxed text-charcoal">
                     Aurelia House<br />12 Princess Street,<br />Fort Kochi, Kerala 682001, India
                   </address>
                 </div>
+
                 <div>
-                  <h3 className="text-body font-medium text-forest">Reservations</h3>
-                  <a href="tel:+914800002148" className="mt-2 block text-body-sm text-charcoal transition-colors hover:text-terracotta">
-                    +91 480 000 2148
+                  <h3 className="flex items-center gap-2 text-body font-medium text-forest">
+                    <Phone className="h-4 w-4 text-terracotta" /> Reservations
+                  </h3>
+                  <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="mt-2 block text-body-sm text-charcoal transition-colors hover:text-terracotta">
+                    {CONTACT.phone}
                   </a>
                 </div>
+
                 <div>
-                  <h3 className="text-body font-medium text-forest">Email</h3>
-                  <a href="mailto:stay@aureliahouse.in" className="mt-2 block text-body-sm text-charcoal transition-colors hover:text-terracotta">
-                    stay@aureliahouse.in
+                  <h3 className="flex items-center gap-2 text-body font-medium text-forest">
+                    <Mail className="h-4 w-4 text-terracotta" /> Email
+                  </h3>
+                  <a href={`mailto:${CONTACT.email}`} className="mt-2 block text-body-sm text-charcoal transition-colors hover:text-terracotta">
+                    {CONTACT.email}
                   </a>
+                </div>
+
+                <div className="border-t border-forest/10 pt-6">
+                  <h3 className="flex items-center gap-2 text-body font-medium text-forest">
+                    <Navigation className="h-4 w-4 text-terracotta" /> Arrival Guide
+                  </h3>
+                  <p className="mt-2 text-body-sm leading-relaxed text-forest/70">
+                    {CONTACT.airportDistance}. Private airport chauffeur pick-up can be arranged upon request.
+                  </p>
                 </div>
               </div>
             </div>

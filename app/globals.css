@@ -73,6 +73,31 @@
   .text-price {
     @apply text-[20px] font-serif font-medium leading-none md:text-[22px];
   }
+
+  /* Rich Text Editorial Articles */
+  .prose-aurelia p {
+    @apply mb-6 text-body-lg text-charcoal leading-relaxed;
+  }
+
+  .prose-aurelia h2 {
+    @apply mt-10 mb-4 text-display-md text-forest;
+  }
+
+  .prose-aurelia h3 {
+    @apply mt-8 mb-3 text-display-sm text-forest;
+  }
+
+  .prose-aurelia blockquote {
+    @apply my-10 border-l-2 border-terracotta pl-6 font-serif text-[24px] italic leading-snug text-forest md:text-[30px];
+  }
+
+  .prose-aurelia ul {
+    @apply mb-6 list-disc space-y-2 pl-6 text-body text-charcoal;
+  }
+
+  .prose-aurelia ol {
+    @apply mb-6 list-decimal space-y-2 pl-6 text-body text-charcoal;
+  }
 }
 
 /* ─── Hero Ken Burns Zoom ───────────────────────────────────────────────────── */

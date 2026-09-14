@@ -1,0 +1,61 @@
+-- Seed data for Aurelia House Rooms
+insert into public.rooms (slug, name, category, size, bed, view, feature, price, price_display, description, guests, inventory_count, amenities, image, gallery, index_label, headline)
+values
+(
+  'courtyard-room',
+  'Courtyard Room',
+  'courtyard',
+  '28 m²',
+  'King Bed',
+  'Courtyard View',
+  'Rain Shower',
+  12500,
+  '₹12,500 / night',
+  'A calm, intimate room opening onto the hotel''s quiet central courtyard.',
+  2,
+  10,
+  array['Wi-Fi', 'Air conditioning', 'King-size bed', 'Rain shower', 'Mini bar', 'Coffee station', 'Smart TV', 'Bath amenities', 'Work desk'],
+  '/images/room-courtyard.jpg',
+  array['/images/room-courtyard.jpg', '/images/room-shower.jpg', '/images/intro-courtyard.jpg'],
+  'ROOM 01',
+  'INTIMATE CALM IN THE HEART OF THE COURTYARD.'
+),
+(
+  'garden-suite',
+  'Garden Suite',
+  'garden',
+  '42 m²',
+  'King Bed',
+  'Garden View',
+  'Private Balcony',
+  18500,
+  '₹18,500 / night',
+  'A spacious suite with natural textures, soft light and a private garden-facing balcony.',
+  2,
+  10,
+  array['Wi-Fi', 'Air conditioning', 'King-size bed', 'Rain shower', 'Mini bar', 'Coffee station', 'Smart TV', 'Bath amenities', 'Work desk', 'Balcony'],
+  '/images/room-garden.jpg',
+  array['/images/room-garden.jpg', '/images/room-shower.jpg', '/images/story-architecture.jpg'],
+  'ROOM 02',
+  'A LITTLE MORE ROOM TO BREATHE.'
+),
+(
+  'aurelia-suite',
+  'Aurelia Suite',
+  'suite',
+  '65 m²',
+  'King Bed',
+  'Private Terrace',
+  'Living Room',
+  26000,
+  '₹26,000 / night',
+  'Our most spacious accommodation, designed for long, slow stays with a private terrace.',
+  2,
+  4,
+  array['Wi-Fi', 'Air conditioning', 'King-size bed', 'Rain shower', 'Mini bar', 'Coffee station', 'Smart TV', 'Bath amenities', 'Work desk', 'Balcony', 'Living Room', 'Private Terrace'],
+  '/images/room-aurelia.jpg',
+  array['/images/room-aurelia.jpg', '/images/room-shower.jpg', '/images/hero-golden-hour.jpg'],
+  'ROOM 03',
+  'OUR SIGNATURE SANCTUARY.'
+)
+on conflict (slug) do nothing;

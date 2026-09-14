@@ -93,3 +93,18 @@ export const reservationRequestSchema = z
   });
 
 export type ReservationRequestPayload = z.infer<typeof reservationRequestSchema>;
+
+// ── POST /api/dining-reservation ─────────────────────────────────────────────
+
+export const moraReservationSchema = z.object({
+  name: nameField,
+  email: emailField,
+  phone: z.string().trim().min(5, "Valid phone number required."),
+  date: isoDateString,
+  timeSlot: z.string().min(1, "Please select a dining time slot."),
+  partySize: z.coerce.number().min(1, "At least 1 guest.").max(8, "Maximum 8 guests per table."),
+  seatingPreference: z.enum(["Courtyard", "Indoor"]).default("Indoor"),
+  specialRequests: messageField,
+});
+
+export type MoraReservationPayload = z.infer<typeof moraReservationSchema>;

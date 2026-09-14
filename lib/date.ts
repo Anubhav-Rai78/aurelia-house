@@ -151,6 +151,26 @@ export function getISTDayStartDaysAgo(n: number): Date {
   return target;
 }
 
+export function calculateNights(checkIn: string, checkOut: string): number {
+  if (!checkIn || !checkOut) return 0;
+  const start = new Date(`${checkIn}T00:00:00Z`).getTime();
+  const end = new Date(`${checkOut}T00:00:00Z`).getTime();
+  if (isNaN(start) || isNaN(end) || end <= start) return 0;
+  return Math.round((end - start) / (1000 * 60 * 60 * 24));
+}
+
+export function getTomorrowISO(): string {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow.toISOString().slice(0, 10);
+}
+
+export function getNDaysLaterISO(n = 3, fromDate?: string): string {
+  const base = fromDate ? new Date(`${fromDate}T00:00:00Z`) : new Date();
+  base.setDate(base.getDate() + n);
+  return base.toISOString().slice(0, 10);
+}
+
 export default {
   getNowIST,
   formatDateIST,
@@ -162,4 +182,8 @@ export default {
   getISTDayStart,
   getISTDayEnd,
   getISTDayStartDaysAgo,
+  calculateNights,
+  getTomorrowISO,
+  getNDaysLaterISO,
 };
+
