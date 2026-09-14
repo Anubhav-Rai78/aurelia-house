@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { CONTACT_PAGE, CONTACT } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
 import { MapPin, Phone, Mail, Navigation, CheckCircle2 } from "lucide-react";
@@ -171,25 +172,19 @@ export default function ContactPage() {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <label htmlFor="checkin" className="text-label text-forest/60">CHECK-IN DATE</label>
-                    <input
-                      id="checkin"
-                      name="checkin"
-                      type="date"
-                      value={formData.checkin}
-                      onChange={(e) => setFormData({ ...formData, checkin: e.target.value })}
-                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                    <DatePicker
+                      label="CHECK-IN DATE"
+                      date={formData.checkin}
+                      onDateChange={(val) => setFormData({ ...formData, checkin: val })}
+                      placeholder="Select check-in"
                     />
                   </div>
                   <div>
-                    <label htmlFor="checkout" className="text-label text-forest/60">CHECK-OUT DATE</label>
-                    <input
-                      id="checkout"
-                      name="checkout"
-                      type="date"
-                      value={formData.checkout}
-                      onChange={(e) => setFormData({ ...formData, checkout: e.target.value })}
-                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                    <DatePicker
+                      label="CHECK-OUT DATE"
+                      date={formData.checkout}
+                      onDateChange={(val) => setFormData({ ...formData, checkout: val })}
+                      placeholder="Select check-out"
                     />
                   </div>
                 </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { SiteImage } from "@/components/ui/site-image";
 import { DINING } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
@@ -207,14 +208,11 @@ export default function DiningPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="res-date" className="text-label text-forest/60">DATE</label>
-                    <input
-                      id="res-date"
-                      type="date"
-                      required
-                      value={tableForm.date}
-                      onChange={(e) => setTableForm({ ...tableForm, date: e.target.value })}
-                      className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
+                    <DatePicker
+                      label="DATE"
+                      date={tableForm.date}
+                      onDateChange={(val) => setTableForm({ ...tableForm, date: val })}
+                      placeholder="Select date"
                     />
                   </div>
                   <div>
