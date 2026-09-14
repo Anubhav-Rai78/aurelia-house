@@ -5,6 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { CONTACT_PAGE, CONTACT } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
 import { MapPin, Phone, Mail, Navigation, CheckCircle2 } from "lucide-react";
@@ -155,18 +162,20 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="guests" className="text-label text-forest/60">GUESTS</label>
-                    <select
-                      id="guests"
-                      name="guests"
+                    <label className="text-label text-forest/60">GUESTS</label>
+                    <Select
                       value={formData.guests}
-                      onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                      className="mt-2 w-full cursor-pointer border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                      onValueChange={(val) => setFormData({ ...formData, guests: val })}
                     >
-                      {CONTACT_PAGE.guestOptions.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
+                      <SelectTrigger className="mt-2 py-3">
+                        <SelectValue placeholder="Select guests" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CONTACT_PAGE.guestOptions.map((opt) => (
+                          <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -190,18 +199,20 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="room" className="text-label text-forest/60">ROOM PREFERENCE</label>
-                  <select
-                    id="room"
-                    name="room"
+                  <label className="text-label text-forest/60">ROOM PREFERENCE</label>
+                  <Select
                     value={formData.room}
-                    onChange={(e) => setFormData({ ...formData, room: e.target.value })}
-                    className="mt-2 w-full cursor-pointer border-b border-forest/15 bg-transparent py-3 text-body text-forest focus:outline-none"
+                    onValueChange={(val) => setFormData({ ...formData, room: val })}
                   >
-                    {CONTACT_PAGE.roomOptions.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="mt-2 py-3">
+                      <SelectValue placeholder="Select a room" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CONTACT_PAGE.roomOptions.map((opt) => (
+                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>

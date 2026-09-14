@@ -4,6 +4,13 @@ import { useState } from "react";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { SiteImage } from "@/components/ui/site-image";
 import { DINING } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
@@ -216,18 +223,21 @@ export default function DiningPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="res-time" className="text-label text-forest/60">TIME SLOT</label>
-                    <select
-                      id="res-time"
+                    <label className="text-label text-forest/60">TIME SLOT</label>
+                    <Select
                       value={tableForm.timeSlot}
-                      onChange={(e) => setTableForm({ ...tableForm, timeSlot: e.target.value })}
-                      className="mt-2 w-full cursor-pointer border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
+                      onValueChange={(val) => setTableForm({ ...tableForm, timeSlot: val })}
                     >
-                      <option value="Breakfast (8:30 AM)">Breakfast (8:30 AM)</option>
-                      <option value="Lunch (1:00 PM)">Lunch (1:00 PM)</option>
-                      <option value="Dinner (7:30 PM)">Dinner (7:30 PM)</option>
-                      <option value="Late Dinner (9:00 PM)">Late Dinner (9:00 PM)</option>
-                    </select>
+                      <SelectTrigger className="mt-2">
+                        <SelectValue placeholder="Select a time slot" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Breakfast (8:30 AM)">Breakfast (8:30 AM)</SelectItem>
+                        <SelectItem value="Lunch (1:00 PM)">Lunch (1:00 PM)</SelectItem>
+                        <SelectItem value="Dinner (7:30 PM)">Dinner (7:30 PM)</SelectItem>
+                        <SelectItem value="Late Dinner (9:00 PM)">Late Dinner (9:00 PM)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 

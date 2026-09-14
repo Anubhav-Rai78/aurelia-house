@@ -3,6 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { calculateNights, getTomorrowISO, getNDaysLaterISO } from "@/lib/date";
 
@@ -84,40 +91,46 @@ export function BookingWidget({
       />
     </div>,
     <div key="guests" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
-      <label htmlFor="booking-guests" className="text-label text-forest/60">
+      <label className="text-label text-forest/60">
         GUESTS
       </label>
-      <select
-        id="booking-guests"
+      <Select
         value={guests}
-        onChange={(e) => setGuests(e.target.value)}
-        className="mt-2 block w-full cursor-pointer bg-transparent text-body text-forest focus:outline-none"
+        onValueChange={setGuests}
       >
-        {["1 Adult", "2 Adults", "3 Adults", "4 Adults"].map(
-          (opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          )
-        )}
-      </select>
+        <SelectTrigger className="mt-2">
+          <SelectValue placeholder="Select guests" />
+        </SelectTrigger>
+        <SelectContent>
+          {["1 Adult", "2 Adults", "3 Adults", "4 Adults"].map(
+            (opt) => (
+              <SelectItem key={opt} value={opt}>
+                {opt}
+              </SelectItem>
+            )
+          )}
+        </SelectContent>
+      </Select>
     </div>,
     <div key="rooms" className="flex-1 px-6 py-4">
-      <label htmlFor="booking-rooms" className="text-label text-forest/60">
+      <label className="text-label text-forest/60">
         ROOMS
       </label>
-      <select
-        id="booking-rooms"
+      <Select
         value={roomsCount}
-        onChange={(e) => setRoomsCount(e.target.value)}
-        className="mt-2 block w-full cursor-pointer bg-transparent text-body text-forest focus:outline-none"
+        onValueChange={setRoomsCount}
       >
-        {["1 Room", "2 Rooms", "3 Rooms"].map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="mt-2">
+          <SelectValue placeholder="Select rooms" />
+        </SelectTrigger>
+        <SelectContent>
+          {["1 Room", "2 Rooms", "3 Rooms"].map((opt) => (
+            <SelectItem key={opt} value={opt}>
+              {opt}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>,
     <div key="submit" className="flex flex-1 items-center justify-end px-6 py-4 md:justify-center md:border-l md:border-forest/10">
       <Button type="submit" variant="primary" className="w-full md:w-auto">
