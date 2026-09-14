@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Aurelia House monogram: forest tile, ivory serif "A", terracotta crossbar.
+       Palette mirrors tailwind.config.ts (forest #17352F, ivory #F6F1E8, terracotta #A95F43). -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#17352F"/>
+  <path d="M32 15L19 50" stroke="#F6F1E8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M32 15L45 50" stroke="#F6F1E8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M24 38H40" stroke="#A95F43" stroke-width="6" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,128 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MobileNav } from "@/components/layout/mobile-nav";
+import { BRAND_NAME, BOOKING_CTA, NAV_ITEMS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+function useScrolled(threshold = 40): boolean {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > threshold);
+    // Check initial position (e.g. on load with a hash or restored scroll).
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
+
+  return scrolled;
+}
+
+/**
+ * Site header. Two states:
+ *   • Home at scrollY === 0: transparent background, ivory text over hero.
+ *   • Everywhere else (and Home once scrolled): ivory background, forest text.
+ * The booking CTA stays visible at all times — it never collapses into the
+ * hamburger menu on mobile (brief requirement).
+ */
+export function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const scrolled = useScrolled(40);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // On non-home pages the header starts solid (no hero image behind it).
+  const solid = isHome ? scrolled : true;
+
+  // Close the mobile menu on navigation.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll while the mobile menu is open.
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [menuOpen]);
+
+  return (
+    <>
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+          solid
+            ? "border-b border-forest/10 bg-ivory text-forest"
+            : "bg-transparent text-ivory"
+        )}
+      >
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 md:px-12">
+          {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
+          <Link
+            href="/"
+            className="py-6 font-serif text-[20px] font-medium tracking-[0.02em]"
+            aria-label="Aurelia House — home"
+          >
+            {BRAND_NAME}
+          </Link>
+
+          {/* Desktop nav (md and up) */}
+          <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "py-1 text-label transition-colors duration-300 hover:opacity-70",
+                  pathname === item.href &&
+                    "border-b-2 border-terracotta pb-0.5"
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-4">
+            {/* Booking CTA — always visible, never hidden on mobile */}
+            <Button
+              href="/contact"
+              variant={solid ? "primary" : "primary-inverse"}
+              className="hidden px-6 py-3 md:inline-flex"
+            >
+              {BOOKING_CTA}
+            </Button>
+            <Button
+              href="/contact"
+              variant={solid ? "primary" : "primary-inverse"}
+              className="inline-flex px-4 py-3 md:hidden"
+              aria-label="Book your stay"
+            >
+              BOOK
+            </Button>
+
+            {/* Hamburger (md and below) */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="inline-flex items-center justify-center p-2 md:hidden"
+              aria-label="Open navigation menu"
+            >
+              <Menu className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </>
+  );
+}

@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ──────────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ivory text-charcoal antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ─── Typography Component Classes ──────────────────────────────────────────── */
+/* Every heading on the site MUST use one of these — never hand-type a
+   font-size utility directly in a page file. This guarantees pixel-identical
+   headings across all 9 pages. Mobile-first: define mobile size, override
+   at md: breakpoint for desktop. */
+
+@layer components {
+  .text-display-xl {
+    @apply text-[44px] font-serif font-medium leading-[1.05] md:text-[88px];
+  }
+  .text-display-lg {
+    @apply text-[34px] font-serif font-medium leading-[1.1] md:text-[56px];
+  }
+  .text-display-md {
+    @apply text-[28px] font-serif font-medium leading-[1.15] md:text-[40px];
+  }
+  .text-display-sm {
+    @apply text-[22px] font-serif font-medium leading-[1.2] md:text-[28px];
+  }
+  .text-label {
+    @apply text-[11px] font-sans font-medium tracking-[0.08em] uppercase md:text-[12px];
+  }
+  .text-body-lg {
+    @apply text-[16px] font-sans leading-[1.6] md:text-[18px];
+  }
+  .text-body {
+    @apply text-[16px] font-sans leading-[1.6] md:text-[16px];
+  }
+  .text-body-sm {
+    @apply text-[13px] font-sans leading-[1.5] md:text-[14px];
+  }
+  .text-price {
+    @apply text-[20px] font-serif font-medium leading-none md:text-[22px];
+  }
+}
+
+/* ─── Hero Ken Burns Zoom ───────────────────────────────────────────────────── */
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+.animate-hero-zoom {
+  animation: hero-zoom 20s linear infinite alternate;
+}
+
+/* ─── Hero Entrance (single orchestrated fade-up on load) ──────────────────── */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-entrance {
+  animation: hero-fade-up 600ms ease-out 600ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-entrance {
+    animation: none;
+  }
+}
+
+/* ─── Scroll Reveal ─────────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect reduced-motion: show content immediately */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ─── Date Input Reset ──────────────────────────────────────────────────────── */
+/* Remove default browser chrome from date inputs so they match the
+   editorial, non-corporate feel of the site. */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+/* ─── Select Reset ──────────────────────────────────────────────────────────── */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23242421' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+/* ─── Horizontal Scroll Snap (Room Gallery) ─────────────────────────────────── */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-x > * {
+  scroll-snap-align: center;
+}
+
+/* Hide scrollbar on horizontal scroll strips while keeping scroll functional */
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
