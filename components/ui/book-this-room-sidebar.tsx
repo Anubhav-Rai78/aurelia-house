@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { calculateNights, getTomorrowISO, getNDaysLaterISO } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
+import { parseISO } from "date-fns";
 
 export function BookThisRoomSidebar({
   roomName,
@@ -15,7 +17,12 @@ export function BookThisRoomSidebar({
 }) {
   const router = useRouter();
 
-  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const todayDate = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
+
   const defaultCheckIn = useMemo(() => getTomorrowISO(), []);
   const defaultCheckOut = useMemo(() => getNDaysLaterISO(3, defaultCheckIn), [defaultCheckIn]);
 
@@ -25,6 +32,17 @@ export function BookThisRoomSidebar({
   const nights = useMemo(() => calculateNights(checkIn, checkOut), [checkIn, checkOut]);
   const totalPrice = useMemo(() => nights * pricePerNight, [nights, pricePerNight]);
   const taxEstimate = useMemo(() => Math.round(totalPrice * 0.18), [totalPrice]); // 18% GST
+
+  const minCheckOutDate = useMemo(() => {
+    if (!checkIn) return todayDate;
+    try {
+      const d = parseISO(checkIn);
+      d.setDate(d.getDate() + 1);
+      return d;
+    } catch {
+      return todayDate;
+    }
+  }, [checkIn, todayDate]);
 
   const handleCheckInChange = (val: string) => {
     setCheckIn(val);
@@ -47,45 +65,35 @@ export function BookThisRoomSidebar({
       <p className="mt-1 text-body-sm text-forest/60">Best rate guaranteed · Instant booking request</p>
 
       <div className="mt-6 space-y-4">
-        <div>
-          <label htmlFor="sidebar-checkin" className="text-label text-forest/60">
-            CHECK-IN
-          </label>
-          <input
-            id="sidebar-checkin"
-            type="date"
-            min={todayISO}
-            value={checkIn}
-            onChange={(e) => handleCheckInChange(e.target.value)}
-            className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
-          />
-        </div>
+        <DatePicker
+          label="CHECK-IN"
+          date={checkIn}
+          onDateChange={handleCheckInChange}
+          minDate={todayDate}
+          placeholder="Select check-in"
+        />
 
         <div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="sidebar-checkout" className="text-label text-forest/60">
-              CHECK-OUT
-            </label>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-label text-forest/60">CHECK-OUT</span>
             {nights > 0 && (
               <span className="text-[11px] font-sans font-medium uppercase text-terracotta">
                 {nights} {nights === 1 ? "Night" : "Nights"}
               </span>
             )}
           </div>
-          <input
-            id="sidebar-checkout"
-            type="date"
-            min={checkIn ? getNDaysLaterISO(1, checkIn) : todayISO}
-            value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)}
-            className="mt-2 w-full border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
+          <DatePicker
+            date={checkOut}
+            onDateChange={setCheckOut}
+            minDate={minCheckOutDate}
+            placeholder="Select check-out"
           />
         </div>
       </div>
 
       {/* Price breakdown */}
       {nights > 0 && (
-        <div className="mt-6 border-t border-forest/10 pt-4 space-y-2 text-body-sm">
+        <div className="mt-6 space-y-2 border-t border-forest/10 pt-4 text-body-sm">
           <div className="flex justify-between text-charcoal">
             <span>{formatCurrency(pricePerNight)} × {nights} nights</span>
             <span>{formatCurrency(totalPrice)}</span>

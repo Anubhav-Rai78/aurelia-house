@@ -3,13 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { cn } from "@/lib/utils";
 import { calculateNights, getTomorrowISO, getNDaysLaterISO } from "@/lib/date";
+import { parseISO } from "date-fns";
 
 /**
- * BookingWidget — slim horizontal bar with CHECK-IN / CHECK-OUT / GUESTS /
- * ROOMS fields. Enforces checkin >= today and checkout > checkin bounds.
- * Displays live night count preview.
+ * BookingWidget — slim horizontal bar with luxury DatePicker fields.
  */
 export function BookingWidget({
   className,
@@ -20,7 +20,12 @@ export function BookingWidget({
 }) {
   const router = useRouter();
 
-  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const todayDate = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
+
   const defaultCheckIn = useMemo(() => getTomorrowISO(), []);
   const defaultCheckOut = useMemo(() => getNDaysLaterISO(3, defaultCheckIn), [defaultCheckIn]);
 
@@ -31,7 +36,17 @@ export function BookingWidget({
 
   const nights = useMemo(() => calculateNights(checkIn, checkOut), [checkIn, checkOut]);
 
-  // When check-in changes, ensure check-out is at least 1 day later
+  const minCheckOutDate = useMemo(() => {
+    if (!checkIn) return todayDate;
+    try {
+      const d = parseISO(checkIn);
+      d.setDate(d.getDate() + 1);
+      return d;
+    } catch {
+      return todayDate;
+    }
+  }, [checkIn, todayDate]);
+
   const handleCheckInChange = (val: string) => {
     setCheckIn(val);
     if (val >= checkOut) {
@@ -51,36 +66,28 @@ export function BookingWidget({
 
   const fields: React.ReactNode[] = [
     <div key="checkin" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
-      <label htmlFor="booking-checkin" className="text-label text-forest/60">
-        CHECK-IN
-      </label>
-      <input
-        id="booking-checkin"
-        type="date"
-        min={todayISO}
-        value={checkIn}
-        onChange={(e) => handleCheckInChange(e.target.value)}
-        className="mt-2 block w-full bg-transparent text-body text-forest focus:outline-none"
+      <DatePicker
+        label="CHECK-IN"
+        date={checkIn}
+        onDateChange={handleCheckInChange}
+        minDate={todayDate}
+        placeholder="Select check-in"
       />
     </div>,
     <div key="checkout" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
-      <div className="flex items-center justify-between">
-        <label htmlFor="booking-checkout" className="text-label text-forest/60">
-          CHECK-OUT
-        </label>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-label text-forest/60">CHECK-OUT</span>
         {nights > 0 && (
           <span className="text-[11px] font-sans font-medium uppercase text-terracotta">
             {nights} {nights === 1 ? "Night" : "Nights"}
           </span>
         )}
       </div>
-      <input
-        id="booking-checkout"
-        type="date"
-        min={checkIn ? getNDaysLaterISO(1, checkIn) : todayISO}
-        value={checkOut}
-        onChange={(e) => setCheckOut(e.target.value)}
-        className="mt-2 block w-full bg-transparent text-body text-forest focus:outline-none"
+      <DatePicker
+        date={checkOut}
+        onDateChange={setCheckOut}
+        minDate={minCheckOutDate}
+        placeholder="Select check-out"
       />
     </div>,
     <div key="guests" className="flex-1 px-6 py-4 md:border-r md:border-forest/10">
@@ -91,15 +98,13 @@ export function BookingWidget({
         id="booking-guests"
         value={guests}
         onChange={(e) => setGuests(e.target.value)}
-        className="mt-2 block w-full cursor-pointer bg-transparent text-body text-forest focus:outline-none"
+        className="mt-2 block w-full cursor-pointer bg-transparent font-sans text-body text-forest focus:outline-none"
       >
-        {["1 Adult", "2 Adults", "3 Adults", "4 Adults"].map(
-          (opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          )
-        )}
+        {["1 Adult", "2 Adults", "3 Adults", "4 Adults"].map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
       </select>
     </div>,
     <div key="rooms" className="flex-1 px-6 py-4">
@@ -110,7 +115,7 @@ export function BookingWidget({
         id="booking-rooms"
         value={roomsCount}
         onChange={(e) => setRoomsCount(e.target.value)}
-        className="mt-2 block w-full cursor-pointer bg-transparent text-body text-forest focus:outline-none"
+        className="mt-2 block w-full cursor-pointer bg-transparent font-sans text-body text-forest focus:outline-none"
       >
         {["1 Room", "2 Rooms", "3 Rooms"].map((opt) => (
           <option key={opt} value={opt}>
