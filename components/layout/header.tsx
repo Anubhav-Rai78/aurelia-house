@@ -72,7 +72,7 @@ export function Header() {
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
-            className="group flex items-center gap-3 py-6"
+            className="group flex items-center gap-3 py-1"
             aria-label="Aurelia House — home"
           >
             <BrandIcon

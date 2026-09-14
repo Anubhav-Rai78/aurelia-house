@@ -45,7 +45,7 @@ export function MobileNav({
       aria-hidden={!open}
     >
       {/* Top bar with wordmark + close */}
-      <div className="flex items-center justify-between px-6 py-6">
+      <div className="flex items-center justify-between px-6 py-1">
         <Link
           href="/"
           onClick={onClose}

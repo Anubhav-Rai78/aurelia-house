@@ -35,7 +35,7 @@ export function Footer() {
           {/* Column 1 — Wordmark + tagline + Newsletter */}
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="inline-flex flex-col items-start transition-opacity hover:opacity-80">
-              <BrandIcon size={144} className="mb-3 text-ivory" />
+              <BrandIcon size={144} className="mb-1 text-ivory" />
               <span className="text-display-sm">{BRAND_NAME}</span>
             </Link>
             <p className="mt-3 text-body-sm text-ivory/70">{TAGLINE}</p>
