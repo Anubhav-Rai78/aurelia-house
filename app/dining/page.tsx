@@ -1,6 +1,6 @@
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import { DINING } from "@/lib/constants";
 
 export const metadata = {
@@ -14,10 +14,14 @@ export default function DiningPage() {
       {/* Hero — MORA headline over a cinematic dining image */}
       <section className="relative flex min-h-[60vh] items-end overflow-hidden bg-forest">
         <div className="absolute inset-0">
-          <PlaceholderImage
+          <SiteImage
+            src="/images/dining-hero.jpg"
+            alt="MORA restaurant interior in warm golden-hour light"
             caption="Cinematic MORA restaurant interior at golden hour, warm ambient lighting"
             aspectRatio="h-full w-full"
             className="h-full w-full"
+            sizes="100vw"
+            priority
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-forest/70 via-transparent to-transparent" aria-hidden="true" />
@@ -56,10 +60,13 @@ export default function DiningPage() {
           <SectionReveal className="md:col-span-6">
             <h2 className="text-label text-terracotta">{DINING.sampleMenuLabel}</h2>
             <div className="mt-6">
-              <PlaceholderImage
+              <SiteImage
+                src="/images/dining-menu.jpg"
+                alt="Editorial photograph of MORA's sample menu on a natural surface"
                 caption="MORA sample menu — editorial layout, terracotta / ivory, on a natural surface"
                 aspectRatio="aspect-[3/4]"
                 className="w-full"
+                sizes="(min-width: 768px) 50vw, 100vw"
               />
             </div>
           </SectionReveal>
@@ -68,10 +75,13 @@ export default function DiningPage() {
 
       {/* Parallax strip */}
       <section className="relative h-[320px] overflow-hidden bg-forest">
-        <PlaceholderImage
+        <SiteImage
+          src="/images/dining-chef.jpg"
+          alt="Chef plating a dish at MORA"
           caption="Cinematic detail of MORA — plated food / chef at work"
           aspectRatio="absolute inset-0 h-full w-full"
           className="absolute inset-0 h-full w-full opacity-60"
+          sizes="100vw"
         />
         <div className="absolute inset-0 flex items-center justify-center bg-forest/30">
           <p className="text-display-md text-center text-ivory">

@@ -7,16 +7,19 @@
   html {
     scroll-behavior: smooth;
   }
+
   body {
     @apply bg-ivory text-charcoal antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
   /* Respect user's motion preferences */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+
     *,
     *::before,
     *::after {
@@ -38,27 +41,35 @@
   .text-display-xl {
     @apply text-[44px] font-serif font-medium leading-[1.05] md:text-[88px];
   }
+
   .text-display-lg {
     @apply text-[34px] font-serif font-medium leading-[1.1] md:text-[56px];
   }
+
   .text-display-md {
     @apply text-[28px] font-serif font-medium leading-[1.15] md:text-[40px];
   }
+
   .text-display-sm {
     @apply text-[22px] font-serif font-medium leading-[1.2] md:text-[28px];
   }
+
   .text-label {
     @apply text-[11px] font-sans font-medium tracking-[0.08em] uppercase md:text-[12px];
   }
+
   .text-body-lg {
     @apply text-[16px] font-sans leading-[1.6] md:text-[18px];
   }
+
   .text-body {
     @apply text-[16px] font-sans leading-[1.6] md:text-[16px];
   }
+
   .text-body-sm {
     @apply text-[13px] font-sans leading-[1.5] md:text-[14px];
   }
+
   .text-price {
     @apply text-[20px] font-serif font-medium leading-none md:text-[22px];
   }
@@ -66,8 +77,13 @@
 
 /* ─── Hero Ken Burns Zoom ───────────────────────────────────────────────────── */
 @keyframes hero-zoom {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.08);
+  }
 }
 
 .animate-hero-zoom {
@@ -80,6 +96,7 @@
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -146,7 +163,7 @@ select {
   -webkit-overflow-scrolling: touch;
 }
 
-.scroll-snap-x > * {
+.scroll-snap-x>* {
   scroll-snap-align: center;
 }
 
@@ -154,6 +171,7 @@ select {
 .scroll-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scroll-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

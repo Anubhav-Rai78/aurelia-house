@@ -28,7 +28,9 @@ function useScrolled(threshold = 40): boolean {
  *   • Home at scrollY === 0: transparent background, ivory text over hero.
  *   • Everywhere else (and Home once scrolled): ivory background, forest text.
  * The booking CTA stays visible at all times — it never collapses into the
- * hamburger menu on mobile (brief requirement).
+ * hamburger menu on mobile (brief requirement). The CTA is always primary
+ * (forest background, ivory text) so "BOOK YOUR STAY" stays crisp and
+ * legible whether the header is transparent over the hero or solid.
  */
 export function Header() {
   const pathname = usePathname();
@@ -92,17 +94,19 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-4">
-            {/* Booking CTA — always visible, never hidden on mobile */}
+            {/* Booking CTA — always visible, never hidden on mobile.
+                Always primary (forest bg / ivory text) so it stays crisp on
+                both the transparent header over the hero and the solid header. */}
             <Button
               href="/contact"
-              variant={solid ? "primary" : "primary-inverse"}
+              variant="primary"
               className="hidden px-6 py-3 md:inline-flex"
             >
               {BOOKING_CTA}
             </Button>
             <Button
               href="/contact"
-              variant={solid ? "primary" : "primary-inverse"}
+              variant="primary"
               className="inline-flex px-4 py-3 md:hidden"
               aria-label="Book your stay"
             >

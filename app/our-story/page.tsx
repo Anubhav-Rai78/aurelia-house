@@ -1,5 +1,5 @@
 import { SectionReveal } from "@/components/ui/section-reveal";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import { OUR_STORY } from "@/lib/constants";
 
 export const metadata = {
@@ -27,10 +27,13 @@ export default function OurStoryPage() {
           {/* Image — left, portrait */}
           <SectionReveal className="md:col-span-5">
             <div className="aspect-[4/5] overflow-hidden rounded">
-              <PlaceholderImage
+              <SiteImage
+                src="/images/story-main.jpg"
+                alt="Architectural detail at Aurelia House — natural materials and a sense of place"
                 caption="Architectural / founder detail — natural materials, authentic sense of place"
                 aspectRatio="h-full w-full"
                 className="h-full w-full"
+                sizes="(min-width: 768px) 42vw, 100vw"
               />
             </div>
           </SectionReveal>
@@ -63,13 +66,28 @@ export default function OurStoryPage() {
                   "Placeholder — the hotel's philosophy in visual form, quiet spaces",
                   "Placeholder — local cultural element woven into the hotel's design",
                 ];
+                const images = [
+                  "/images/story-architecture.jpg",
+                  "/images/story-main.jpg",
+                  "/images/intro-courtyard.jpg",
+                  "/images/kochi-fishing-nets.jpg",
+                ];
+                const alts = [
+                  "Kerala architecture — terracotta, wood and contemporary design",
+                  "The story behind Aurelia House, told through natural materials",
+                  "Quiet spaces and the hotel's philosophy made visible",
+                  "Local culture woven into the hotel's design",
+                ];
                 return (
                   <article key={sub.label} className="flex flex-col overflow-hidden rounded border border-forest/10 bg-ivory">
                     <div className="aspect-[3/4] overflow-hidden">
-                      <PlaceholderImage
+                      <SiteImage
+                        src={images[i]}
+                        alt={alts[i]}
                         caption={captions[i]}
                         aspectRatio="h-full w-full"
                         className="h-full w-full"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                       />
                     </div>
                     <div className="p-6">

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import { journalArticles } from "@/data/journalArticles";
 import { BRAND_NAME, JOURNAL } from "@/lib/constants";
 
@@ -32,13 +32,6 @@ export default async function JournalArticlePage({
     notFound();
   }
 
-  const captions: Record<string, string> = {
-    "48-hours-in-fort-kochi": "Hero — Fort Kochi street scene, colonial architecture, daylight",
-    "a-guide-to-keralas-coastal-cuisine": "Hero — Kerala seafood and spices on a table, warm light",
-    "why-slow-travel-matters": "Hero — quiet courtyard with tropical greenery",
-    "the-architecture-of-aurelia-house": "Hero — architectural detail, contemporary Kerala design",
-  };
-
   // Predecessor / successor logic — circular list
   const idx = journalArticles.findIndex((a) => a.slug === slug);
   const prev = journalArticles[(idx - 1 + journalArticles.length) % journalArticles.length];
@@ -49,10 +42,14 @@ export default async function JournalArticlePage({
       {/* Hero — full-bleed header image + category + title */}
       <section className="relative flex min-h-[50vh] items-end overflow-hidden bg-forest pt-24 md:pt-28">
         <div className="absolute inset-0">
-          <PlaceholderImage
-            caption={captions[slug] ?? "Placeholder — journal hero image"}
+          <SiteImage
+            src={article.image}
+            alt={article.title}
+            caption="Placeholder — journal hero image"
             aspectRatio="h-full w-full"
             className="h-full w-full"
+            sizes="100vw"
+            priority
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-forest/70 via-transparent to-transparent" aria-hidden="true" />

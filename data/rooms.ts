@@ -18,6 +18,8 @@ export interface Room {
   description: string;
   guests: number;
   amenities: string[];
+  /** Local image path in /public/images. */
+  image: string;
   /** Index is 1-based room number displayed as "ROOM 01" etc. */
   index: string;
   /** Optional dedicated headline used on the individual room page. */
@@ -48,6 +50,7 @@ export const rooms: Room[] = [
       "Bath amenities",
       "Work desk",
     ],
+    image: "/images/room-courtyard.jpg",
     index: "ROOM 01",
   },
   {
@@ -74,6 +77,7 @@ export const rooms: Room[] = [
       "Work desk",
       "Balcony",
     ],
+    image: "/images/room-garden.jpg",
     index: "ROOM 02",
     headline: "A LITTLE MORE ROOM\nTO BREATHE.",
   },
@@ -101,6 +105,7 @@ export const rooms: Room[] = [
       "Work desk",
       "Balcony",
     ],
+    image: "/images/room-aurelia.jpg",
     index: "ROOM 03",
   },
 ];

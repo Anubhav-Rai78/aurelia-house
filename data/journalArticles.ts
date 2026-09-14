@@ -9,6 +9,8 @@ export interface JournalArticle {
   category: string;
   title: string;
   description: string;
+  /** Local image path in /public/images (reused from site photography). */
+  image: string;
 }
 
 export const journalArticles: JournalArticle[] = [
@@ -20,6 +22,7 @@ export const journalArticles: JournalArticle[] = [
        write one only once real article content exists */
     description:
       "A considered weekend itinerary through Fort Kochi's streets, coast and courtyards.",
+    image: "/images/exp-fort-kochi-night.jpg",
   },
   {
     slug: "a-guide-to-keralas-coastal-cuisine",
@@ -28,6 +31,7 @@ export const journalArticles: JournalArticle[] = [
     /* SPEC-GAP: no short description provided in brief */
     description:
       "From appam to karimeen, the ingredients and traditions behind MORA's menu.",
+    image: "/images/dining-home.jpg",
   },
   {
     slug: "why-slow-travel-matters",
@@ -36,6 +40,7 @@ export const journalArticles: JournalArticle[] = [
     /* SPEC-GAP: no short description provided in brief */
     description:
       "On taking the long way around, and the small luxuries of a slower rhythm.",
+    image: "/images/intro-courtyard.jpg",
   },
   {
     slug: "the-architecture-of-aurelia-house",
@@ -44,5 +49,6 @@ export const journalArticles: JournalArticle[] = [
     /* SPEC-GAP: no short description provided in brief */
     description:
       "Contemporary design, Kerala materials, and a quiet sense of place.",
+    image: "/images/story-architecture.jpg",
   },
 ];

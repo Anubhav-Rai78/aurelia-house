@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { BookingWidget } from "@/components/ui/booking-widget";
 import { rooms } from "@/data/rooms";
@@ -47,10 +47,14 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
       <section className="pt-24 md:pt-28">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <div className="overflow-hidden rounded">
-            <PlaceholderImage
+            <SiteImage
+              src={room.image}
+              alt={`${room.name} at Aurelia House, Fort Kochi`}
               caption={captions[room.slug] ?? "Placeholder — room interior"}
               aspectRatio="aspect-[16/9] md:aspect-[21/9]"
               className="h-full w-full"
+              sizes="100vw"
+              priority
             />
           </div>
         </div>

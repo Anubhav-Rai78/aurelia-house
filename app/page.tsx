@@ -4,7 +4,7 @@ import { BookingWidget } from "@/components/ui/booking-widget";
 import { RoomCard } from "@/components/ui/room-card";
 import { ExperienceCard } from "@/components/ui/experience-card";
 import { Testimonial } from "@/components/ui/testimonial";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import { rooms } from "@/data/rooms";
 import { experiences } from "@/data/experiences";
 import { HOME } from "@/lib/constants";
@@ -20,10 +20,14 @@ export default function HomePage() {
       <section className="relative flex h-screen flex-col justify-end overflow-hidden bg-forest">
         <div className="absolute inset-0">
           <div className="animate-hero-zoom h-full w-full">
-            <PlaceholderImage
+            <SiteImage
+              src="/images/hero-golden-hour.jpg"
+              alt="Aurelia House at golden hour — architecture-forward exterior in warm Kerala light"
               caption="Cinematic exterior/interior of the hotel at golden hour, architecture-forward, Kerala materials visible"
               aspectRatio="h-full w-full"
               className="h-full w-full"
+              sizes="100vw"
+              priority
             />
           </div>
         </div>
@@ -61,10 +65,13 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-12 px-6 md:grid-cols-12 md:px-12">
           <SectionReveal className="order-1 md:col-span-5 md:col-start-8 md:order-none">
             <div className="aspect-[4/5] overflow-hidden rounded">
-              <PlaceholderImage
+              <SiteImage
+                src="/images/intro-courtyard.jpg"
+                alt="Quiet courtyard at Aurelia House — natural materials, dappled light"
                 caption="Architectural detail — courtyard or corridor, natural materials, quiet"
                 aspectRatio="h-full w-full"
                 className="h-full w-full"
+                sizes="(min-width: 768px) 42vw, 100vw"
               />
             </div>
           </SectionReveal>
@@ -108,16 +115,22 @@ export default function HomePage() {
               {HOME.roomsCta}
             </Button>
           </div>
-{/* ── Section 5: Dining ───────────────────────────────────────────── */}
+        </div>
+      </section>
+
+      {/* ── Section 5: Dining ───────────────────────────────────────────── */}
       <section className="py-16 md:py-[120px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-12 px-6 md:grid-cols-12 md:px-12">
           {/* Image — left side this time (alternating rhythm) */}
           <SectionReveal className="md:col-span-5">
             <div className="aspect-[4/5] overflow-hidden rounded">
-              <PlaceholderImage
+              <SiteImage
+                src="/images/dining-home.jpg"
+                alt="Plated coastal dish from MORA, Aurelia House's restaurant"
                 caption="MORA restaurant interior or a plated signature dish"
                 aspectRatio="h-full w-full"
                 className="h-full w-full"
+                sizes="(min-width: 768px) 42vw, 100vw"
               />
             </div>
           </SectionReveal>
@@ -172,8 +185,6 @@ export default function HomePage() {
             </Button>
           </div>
         </SectionReveal>
-      </section>
-        </div>
       </section>
     </>
   );

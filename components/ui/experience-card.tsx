@@ -1,4 +1,4 @@
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import type { Experience } from "@/data/experiences";
 import { cn } from "@/lib/utils";
 
@@ -32,13 +32,18 @@ export function ExperienceCard({
   ];
   const caption = captions[index] ?? captions[0];
 
+  const sizes = mode === "overlay" ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 50vw, 100vw";
+
   if (mode === "overlay") {
     return (
       <article className={cn("group relative overflow-hidden rounded", aspect, className)}>
-        <PlaceholderImage
+        <SiteImage
+          src={experience.image}
+          alt={experience.title}
           caption={caption}
           aspectRatio="absolute inset-0 h-full w-full"
           className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          sizes={sizes}
         />
         {/* Forest scrim for legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-forest/70 to-transparent" aria-hidden="true" />
@@ -52,10 +57,13 @@ export function ExperienceCard({
   return (
     <article className={cn("flex flex-col overflow-hidden rounded border border-forest/10 bg-ivory", className)}>
       <div className={cn("overflow-hidden", aspect)}>
-        <PlaceholderImage
+        <SiteImage
+          src={experience.image}
+          alt={experience.title}
           caption={caption}
           aspectRatio="h-full w-full"
           className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          sizes={sizes}
         />
       </div>
       <div className="flex flex-1 flex-col p-6">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import type { JournalArticle } from "@/data/journalArticles";
 import { JOURNAL } from "@/lib/constants";
 
@@ -21,7 +21,14 @@ export function ArticleCard({ article }: { article: JournalArticle }) {
     <article className="flex flex-col overflow-hidden rounded border border-forest/10 bg-ivory">
       <Link href={`/journal/${article.slug}`} className="block overflow-hidden">
         <div className="aspect-[16/10] transition-transform duration-500 ease-out hover:scale-[1.03]">
-          <PlaceholderImage caption={caption} aspectRatio="h-full w-full" className="h-full w-full" />
+          <SiteImage
+            src={article.image}
+            alt={article.title}
+            caption={caption}
+            aspectRatio="h-full w-full"
+            className="h-full w-full"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
         </div>
       </Link>
       <div className="flex flex-1 flex-col p-6">

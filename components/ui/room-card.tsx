@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
+import { SiteImage } from "@/components/ui/site-image";
 import type { Room } from "@/data/rooms";
 import { STAY } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -48,10 +48,13 @@ export function RoomCard({
             imageAspectRatio
           )}
         >
-          <PlaceholderImage
+          <SiteImage
+            src={room.image}
+            alt={`${room.name} interior at Aurelia House, Fort Kochi`}
             caption={imageCaption}
             aspectRatio="h-full w-full"
             className="h-full w-full"
+            sizes="(min-width: 768px) 33vw, 100vw"
           />
         </div>
         {showIndex && (
