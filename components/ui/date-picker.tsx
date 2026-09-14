@@ -98,7 +98,7 @@ export interface DatePickerProps {
 
 /**
  * Single-date picker. State is exchanged as `Date` objects — consumers with
- * ISO-string state convert at the boundary (`parseISO` / `format(yyyy-MM-dd)`),
+ * ISO-string state convert at the boundary (`parseLocalDateISO` / `format(yyyy-MM-dd)`),
  * keeping API/URL payloads byte-identical.
  */
 export function DatePicker({

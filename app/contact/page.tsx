@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { format, parseISO } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -10,7 +10,9 @@ import { CustomSelect } from "@/components/ui/select";
 import { FormField } from "@/components/ui/form-field";
 import { CONTACT_PAGE, CONTACT } from "@/lib/constants";
 import { apiClient } from "@/lib/api/client";
+import { getNDaysLaterISO, parseLocalDateISO } from "@/lib/date";
 import { MapPin, Phone, Mail, Navigation, CheckCircle2 } from "lucide-react";
+import { experiences } from "@/data/experiences";
 import { rooms } from "@/data/rooms";
 
 export default function ContactPage() {
@@ -46,10 +48,11 @@ export default function ContactPage() {
       setFormData((prev) => ({ ...prev, room: searchParams.get("room")! }));
     }
     if (searchParams.get("experience")) {
-      const exp = searchParams.get("experience")!;
+      const expSlug = searchParams.get("experience")!;
+      const title = experiences.find((e) => e.slug === expSlug)?.title ?? expSlug;
       setFormData((prev) => ({
         ...prev,
-        message: `I would like to reserve the "${exp}" experience during my stay.`,
+        message: `I would like to reserve the "${title}" experience during my stay.`,
       }));
     }
   }, [searchParams]);
@@ -57,6 +60,16 @@ export default function ContactPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+
+    if (!formData.checkin || !formData.checkout) {
+      setError("Please select both a check-in and a check-out date to continue.");
+      return;
+    }
+    if (formData.checkout <= formData.checkin) {
+      setError("Check-out must be after the check-in date.");
+      return;
+    }
+
     setSubmitted(false);
     setSubmitting(true);
 
@@ -171,19 +184,25 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <DatePicker
                     label="CHECK-IN DATE"
-                    date={formData.checkin ? parseISO(formData.checkin) : undefined}
+                    date={formData.checkin ? parseLocalDateISO(formData.checkin) : undefined}
                     onDateChange={(d) =>
                       setFormData((prev) => ({ ...prev, checkin: d ? format(d, "yyyy-MM-dd") : "" }))
                     }
                     placeholder="Select check-in"
+                    minDate={startOfDay(new Date())}
                   />
                   <DatePicker
                     label="CHECK-OUT DATE"
-                    date={formData.checkout ? parseISO(formData.checkout) : undefined}
+                    date={formData.checkout ? parseLocalDateISO(formData.checkout) : undefined}
                     onDateChange={(d) =>
                       setFormData((prev) => ({ ...prev, checkout: d ? format(d, "yyyy-MM-dd") : "" }))
                     }
                     placeholder="Select check-out"
+                    minDate={
+                      formData.checkin
+                        ? parseLocalDateISO(getNDaysLaterISO(1, formData.checkin))
+                        : startOfDay(new Date())
+                    }
                   />
                 </div>
 

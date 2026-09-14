@@ -7,6 +7,7 @@
 // ──────────────────────────────────────────────────────────────────────────────
 
 import { z } from "zod";
+import { formatDateInputIST } from "@/lib/date";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -71,7 +72,10 @@ export const reservationRequestSchema = z
     message: messageField,
   })
   .superRefine((data, ctx) => {
-    const today = new Date().toISOString().slice(0, 10);
+    // "Today" is judged on the hotel's calendar (IST). UTC's date rolls over
+    // five and a half hours later, which would reject legitimate IST "today"
+    // bookings made between 00:00–05:30 IST and admit IST "yesterday" ones.
+    const today = formatDateInputIST(new Date());
     const checkin = Date.parse(`${data.checkin}T00:00:00Z`);
     const checkout = Date.parse(`${data.checkout}T00:00:00Z`);
 
@@ -96,15 +100,28 @@ export type ReservationRequestPayload = z.infer<typeof reservationRequestSchema>
 
 // ── POST /api/dining-reservation ─────────────────────────────────────────────
 
-export const moraReservationSchema = z.object({
-  name: nameField,
-  email: emailField,
-  phone: z.string().trim().min(5, "Valid phone number required."),
-  date: isoDateString,
-  timeSlot: z.string().min(1, "Please select a dining time slot."),
-  partySize: z.coerce.number().min(1, "At least 1 guest.").max(8, "Maximum 8 guests per table."),
-  seatingPreference: z.enum(["Courtyard", "Indoor"]).default("Indoor"),
-  specialRequests: messageField,
-});
+export const moraReservationSchema = z
+  .object({
+    name: nameField,
+    email: emailField,
+    phone: z.string().trim().min(5, "Valid phone number required."),
+    date: isoDateString,
+    timeSlot: z.string().min(1, "Please select a dining time slot."),
+    partySize: z.coerce.number().min(1, "At least 1 guest.").max(8, "Maximum 8 guests per table."),
+    seatingPreference: z.enum(["Courtyard", "Indoor"]).default("Indoor"),
+    specialRequests: messageField,
+  })
+  .superRefine((data, ctx) => {
+    // Guard against bookings posted for a "yesterday" that only looks like
+    // today on a UTC clock (00:00–05:30 IST). Judged on the hotel's calendar.
+    const today = formatDateInputIST(new Date());
+    if (data.date && Date.parse(`${data.date}T00:00:00Z`) < Date.parse(`${today}T00:00:00Z`)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["date"],
+        message: "Reservation date cannot be in the past.",
+      });
+    }
+  });
 
 export type MoraReservationPayload = z.infer<typeof moraReservationSchema>;

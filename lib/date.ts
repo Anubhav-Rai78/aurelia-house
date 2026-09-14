@@ -159,10 +159,42 @@ export function calculateNights(checkIn: string, checkOut: string): number {
   return Math.round((end - start) / (1000 * 60 * 60 * 24));
 }
 
+/**
+ * Parse a date-only ISO string ("YYYY-MM-DD") into a Date at **local**
+ * midnight. Date-only strings must NOT go through `parseISO` (UTC midnight),
+ * or the rendered calendar/trigger drifts a day for users outside UTC.
+ * Returns `undefined` for missing or malformed input so consumers can fall
+ * back to a clean placeholder instead of rendering `Invalid Date`.
+ */
+export function parseLocalDateISO(iso?: string | null): Date | undefined {
+  if (!iso) return undefined;
+  const parts = iso.split("-");
+  if (parts.length !== 3) return undefined;
+  const [y, m, d] = parts.map(Number);
+  if ([y, m, d].some((p) => !Number.isInteger(p))) return undefined;
+  const date = new Date(y, m - 1, d);
+  // Reject impossible calendar days (e.g. 2026-02-30) via a round-trip check.
+  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) {
+    return undefined;
+  }
+  return date;
+}
+
+/**
+ * Returns tomorrow's date as `YYYY-MM-DD` **on the hotel's calendar**
+ * (Asia/Kolkata). `new Date().setDate(+1).toISOString()` is UTC-based and
+ * drifts: for guests in IST between 00:00–05:30 it returns *today*, and for
+ * US/Pacific evenings it returns *day-after-tomorrow*.
+ */
 export function getTomorrowISO(): string {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  return tomorrow.toISOString().slice(0, 10);
+  const { y, m, d } = toISTParts(new Date());
+  // Build at IST midday, then add one calendar day — midnight boundaries
+  // are DST-free in India but midday is the safest move regardless.
+  const istTomorrow = new Date(
+    `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}T12:00:00+05:30`,
+  );
+  istTomorrow.setUTCDate(istTomorrow.getUTCDate() + 1);
+  return istTomorrow.toISOString().slice(0, 10);
 }
 
 export function getNDaysLaterISO(n = 3, fromDate?: string): string {
@@ -177,6 +209,7 @@ export default {
   formatDateTimeIST,
   formatTimeIST,
   formatDateInputIST,
+  parseLocalDateISO,
   getISTMonthStart,
   getISTMonthEnd,
   getISTDayStart,

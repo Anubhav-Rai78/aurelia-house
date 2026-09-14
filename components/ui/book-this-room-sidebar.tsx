@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
-import { format, parseISO, startOfDay } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import { calculateNights, getTomorrowISO, getNDaysLaterISO } from "@/lib/date";
+import { calculateNights, getTomorrowISO, getNDaysLaterISO, parseLocalDateISO } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
 
 export function BookThisRoomSidebar({
@@ -51,7 +51,7 @@ export function BookThisRoomSidebar({
         <div>
           <label className="text-label text-forest/60">CHECK-IN</label>
           <DatePicker
-            date={checkIn ? parseISO(checkIn) : undefined}
+            date={checkIn ? parseLocalDateISO(checkIn) : undefined}
             onDateChange={(d) => {
               if (d) handleCheckInChange(format(d, "yyyy-MM-dd"));
             }}
@@ -70,12 +70,12 @@ export function BookThisRoomSidebar({
             )}
           </div>
           <DatePicker
-            date={checkOut ? parseISO(checkOut) : undefined}
+            date={checkOut ? parseLocalDateISO(checkOut) : undefined}
             onDateChange={(d) => {
               if (d) setCheckOut(format(d, "yyyy-MM-dd"));
             }}
             placeholder="Select check-out"
-            minDate={checkIn ? parseISO(getNDaysLaterISO(1, checkIn)) : startOfDay(new Date())}
+            minDate={checkIn ? parseLocalDateISO(getNDaysLaterISO(1, checkIn)) : startOfDay(new Date())}
           />
         </div>
       </div>

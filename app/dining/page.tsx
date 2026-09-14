@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { format, parseISO } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -16,15 +16,16 @@ import {
   MORA_SAMPLE_MENU,
   MENU_CATEGORY_LABELS,
 } from "@/data/dining";
-import { formatINRWhole } from "@/lib/utils";
+import { formatDateInputIST, parseLocalDateISO } from "@/lib/date";
 import { apiClient } from "@/lib/api/client";
+import { formatINRWhole } from "@/lib/utils";
 
 export default function DiningPage() {
   const [tableForm, setTableForm] = useState({
     name: "",
     email: "",
     phone: "",
-    date: new Date().toISOString().slice(0, 10),
+    date: formatDateInputIST(new Date()),
     timeSlot: "Dinner (7:30 PM)",
     partySize: "2",
     seatingPreference: "Indoor",
@@ -38,6 +39,16 @@ export default function DiningPage() {
   const timeSlotOptions = MORA_MEAL_SLOTS.flatMap((slot) =>
     slot.reservationTimes.map((time) => ({ label: time, value: time }))
   );
+
+  const partySizeOptions = Array.from({ length: 8 }, (_, i) => {
+    const n = i + 1;
+    return { label: n === 1 ? "1 Guest" : `${n} Guests`, value: String(n) };
+  });
+
+  const seatingOptions = [
+    { label: "Indoor", value: "Indoor" },
+    { label: "Courtyard", value: "Courtyard" },
+  ];
 
   const menuSections = (
     Object.entries(MENU_CATEGORY_LABELS) as [keyof typeof MENU_CATEGORY_LABELS, string][]
@@ -230,7 +241,7 @@ export default function DiningPage() {
                   </FormField>
                   <DatePicker
                     label="DATE"
-                    date={tableForm.date ? parseISO(tableForm.date) : undefined}
+                    date={tableForm.date ? parseLocalDateISO(tableForm.date) : undefined}
                     onDateChange={(d) =>
                       setTableForm((prev) => ({
                         ...prev,
@@ -238,6 +249,7 @@ export default function DiningPage() {
                       }))
                     }
                     placeholder="Select date"
+                    minDate={startOfDay(new Date())}
                   />
                   <CustomSelect
                     label="TIME SLOT"
@@ -248,6 +260,39 @@ export default function DiningPage() {
                     placeholder="Select a time slot"
                   />
                 </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <CustomSelect
+                    label="PARTY SIZE"
+                    name="partySize"
+                    value={tableForm.partySize}
+                    onValueChange={(val) => setTableForm((prev) => ({ ...prev, partySize: val }))}
+                    options={partySizeOptions}
+                    placeholder="Select party size"
+                  />
+                  <CustomSelect
+                    label="SEATING PREFERENCE"
+                    name="seatingPreference"
+                    value={tableForm.seatingPreference}
+                    onValueChange={(val) =>
+                      setTableForm((prev) => ({ ...prev, seatingPreference: val }))
+                    }
+                    options={seatingOptions}
+                    placeholder="Select seating"
+                  />
+                </div>
+
+                <FormField htmlFor="res-requests" label="SPECIAL REQUESTS">
+                  <textarea
+                    id="res-requests"
+                    name="specialRequests"
+                    rows={3}
+                    value={tableForm.specialRequests}
+                    onChange={(e) => setTableForm({ ...tableForm, specialRequests: e.target.value })}
+                    className="mt-2 w-full resize-none border-b border-forest/15 bg-transparent py-2 text-body text-forest focus:outline-none"
+                    placeholder="Dietary needs, celebrations, seating notes…"
+                  />
+                </FormField>
 
                 {resError && <p className="text-body-sm text-terracotta">{resError}</p>}
 

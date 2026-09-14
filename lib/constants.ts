@@ -118,10 +118,7 @@ export const JOURNAL = {
 export const CONTACT_PAGE = {
   headline: "PLAN YOUR STAY.",
   submitCta: "REQUEST A RESERVATION",
-  successMessage:
-    "Thank you — we've received your reservation request. Our host team will confirm within 24 hours.",
   errorMessage:
     "Something went wrong sending your request. Please check your information or email stay@aureliahouse.in.",
   guestOptions: ["1 Adult", "2 Adults", "3 Adults", "4 Adults"] as const,
-  roomOptions: ["Select a room", "Courtyard Room", "Garden Suite", "Aurelia Suite"] as const,
 } as const;
