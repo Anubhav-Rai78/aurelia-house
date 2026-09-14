@@ -48,7 +48,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   /** Aurelia: render as a Next.js Link. */
   href?: string;
   /** Render the child element instead of a <button>. */
