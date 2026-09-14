@@ -56,17 +56,32 @@ export default function DiningPage() {
             </div>
           </SectionReveal>
 
-          {/* Right — sample menu */}
+          {/* Right — sample menu with text list + image accent */}
           <SectionReveal className="md:col-span-6">
             <h2 className="text-label text-terracotta">{DINING.sampleMenuLabel}</h2>
-            <div className="mt-6">
+            
+            {/* Editorial text menu with dotted leader prices */}
+            <dl className="mt-6 space-y-3">
+              {DINING.menu.map((item) => (
+                <div key={item.dish} className="flex items-baseline justify-between">
+                  <dt className="text-body text-charcoal">{item.dish}</dt>
+                  <dd className="text-body text-charcoal">
+                    <span className="mx-2 flex-1 border-b border-dotted border-forest/20"></span>
+                    <span className="text-terracotta">{item.price}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            {/* Menu image as accent, smaller */}
+            <div className="mt-8">
               <SiteImage
                 src="/images/dining-menu.jpg"
                 alt="Editorial photograph of MORA's sample menu on a natural surface"
                 caption="MORA sample menu — editorial layout, terracotta / ivory, on a natural surface"
-                aspectRatio="aspect-[3/4]"
-                className="w-full"
-                sizes="(min-width: 768px) 50vw, 100vw"
+                aspectRatio="aspect-[4/3]"
+                className="w-full max-w-[280px]"
+                sizes="(min-width: 768px) 25vw, 100vw"
               />
             </div>
           </SectionReveal>

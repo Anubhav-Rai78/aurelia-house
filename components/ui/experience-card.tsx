@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SiteImage } from "@/components/ui/site-image";
 import type { Experience } from "@/data/experiences";
 import { cn } from "@/lib/utils";
@@ -70,6 +71,12 @@ export function ExperienceCard({
         <h2 className="text-display-sm text-forest">{experience.title}</h2>
         <p className="mt-2 text-body text-charcoal">{experience.description}</p>
         <p className="mt-4 text-price text-terracotta">{experience.priceDisplay}</p>
+        <Link 
+          href={`/contact?experience=${experience.slug}`}
+          className="mt-4 text-body-sm text-terracotta underline decoration-terracotta/30 underline-offset-4 transition-colors hover:decoration-terracotta"
+        >
+          Enquire →
+        </Link>
       </div>
     </article>
   );

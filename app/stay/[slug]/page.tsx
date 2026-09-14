@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { SiteImage } from "@/components/ui/site-image";
 import { SectionReveal } from "@/components/ui/section-reveal";
-import { BookingWidget } from "@/components/ui/booking-widget";
+import { BookThisRoomSidebar } from "@/components/ui/book-this-room-sidebar";
 import { rooms } from "@/data/rooms";
 import { ROOM_PAGE } from "@/lib/constants";
 
@@ -43,7 +43,6 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
-      {/* Hero image — large, full-width, generous aspect */}
       <section className="pt-24 md:pt-28">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <div className="overflow-hidden rounded">
@@ -60,10 +59,8 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
         </div>
       </section>
 
-      {/* Room details */}
       <section className="py-16 md:py-[120px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 px-6 md:grid-cols-12 md:px-12">
-          {/* Main content (col span 8) */}
           <div className="md:col-span-8">
             <SectionReveal>
               <span className="text-label text-forest/40">{room.index}</span>
@@ -83,7 +80,6 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
               </p>
             </SectionReveal>
 
-            {/* Amenities — horizontal scroll on mobile */}
             <SectionReveal className="mt-12">
               <h2 className="text-label text-terracotta">{ROOM_PAGE.amenitiesLabel}</h2>
               <div className="scroll-snap-x scroll-hide mt-6 flex gap-4 overflow-x-auto pb-4 md:flex-wrap md:gap-3">
@@ -97,30 +93,51 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
                 ))}
               </div>
             </SectionReveal>
+
+            <SectionReveal className="mt-12">
+              <h2 className="text-label text-terracotta">GALLERY</h2>
+              <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+                <div className="aspect-[4/3] overflow-hidden rounded">
+                  <SiteImage
+                    src={room.image}
+                    alt={`${room.name} bedroom view`}
+                    caption={`${room.name} — bedroom`}
+                    aspectRatio="h-full w-full"
+                    className="h-full w-full"
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                  />
+                </div>
+                <div className="aspect-[4/3] overflow-hidden rounded">
+                  <SiteImage
+                    src="/images/room-shower.jpg"
+                    alt={`${room.name} bathroom detail`}
+                    caption={`${room.name} — bathroom`}
+                    aspectRatio="h-full w-full"
+                    className="h-full w-full"
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                  />
+                </div>
+                <div className="aspect-[4/3] overflow-hidden rounded md:block">
+                  <SiteImage
+                    src="/images/intro-courtyard.jpg"
+                    alt={`${room.name} view from balcony`}
+                    caption={`${room.name} — ${room.view.toLowerCase()}`}
+                    aspectRatio="h-full w-full"
+                    className="h-full w-full"
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                  />
+                </div>
+              </div>
+            </SectionReveal>
           </div>
 
-          {/* Sidebar: price + CTA + BookingWidget (col span 4) */}
           <div className="md:col-span-4">
             <div className="md:sticky md:top-32">
               <p className="text-price text-terracotta">{room.priceDisplay}</p>
-              <Button href="/contact" variant="primary" className="mt-6 w-full">
+              <Button href={`/contact?room=${room.name}`} variant="primary" className="mt-6 w-full">
                 {ROOM_PAGE.bookThisRoomCta}
               </Button>
-              <div className="mt-8 rounded border border-forest/10 bg-ivory p-4">
-                <p className="text-label text-forest/60">CHECK-IN</p>
-                <input
-                  type="date"
-                  className="mt-2 w-full bg-transparent text-body text-forest focus:outline-none"
-                />
-                <p className="mt-4 text-label text-forest/60">CHECK-OUT</p>
-                <input
-                  type="date"
-                  className="mt-2 w-full bg-transparent text-body text-forest focus:outline-none"
-                />
-                <Button href="/contact" variant="secondary" className="mt-4 w-full">
-                  CHECK AVAILABILITY
-                </Button>
-              </div>
+              <BookThisRoomSidebar roomName={room.name} />
             </div>
           </div>
         </div>

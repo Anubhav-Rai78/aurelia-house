@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Button } from "@/components/ui/button";
 import { CONTACT_PAGE } from "@/lib/constants";
@@ -9,14 +10,38 @@ import { apiClient } from "@/lib/api/client";
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
+  const searchParams = useSearchParams();
+
+  // Pre-populate from URL params
+  const [formData, setFormData] = useState({
+    checkin: searchParams.get("checkin") || "",
+    checkout: searchParams.get("checkout") || "",
+    room: searchParams.get("room") || "",
+    guests: "2 Adults",
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  useEffect(() => {
+    if (searchParams.get("checkin")) {
+      setFormData((prev) => ({ ...prev, checkin: searchParams.get("checkin")! }));
+    }
+    if (searchParams.get("checkout")) {
+      setFormData((prev) => ({ ...prev, checkout: searchParams.get("checkout")! }));
+    }
+    if (searchParams.get("room")) {
+      setFormData((prev) => ({ ...prev, room: searchParams.get("room")! }));
+    }
+  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(false);
     setSubmitted(false);
 
-    const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form));
+    const data = Object.fromEntries(new FormData(e.currentTarget));
 
     try {
       await apiClient("/api/contact", {
@@ -24,7 +49,7 @@ export default function ContactPage() {
         body: JSON.stringify(data),
       });
       setSubmitted(true);
-      form.reset();
+      e.currentTarget.reset();
     } catch {
       setError(true);
     }
@@ -80,20 +105,34 @@ export default function ContactPage() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
                   <label htmlFor="checkin" className="text-label text-forest/60">CHECK-IN</label>
-                  <input id="checkin" name="checkin" type="date"
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none" />
+                  <input 
+                    id="checkin" 
+                    name="checkin" 
+                    type="date"
+                    defaultValue={formData.checkin}
+                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none" 
+                  />
                 </div>
                 <div>
                   <label htmlFor="checkout" className="text-label text-forest/60">CHECK-OUT</label>
-                  <input id="checkout" name="checkout" type="date"
-                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none" />
+                  <input 
+                    id="checkout" 
+                    name="checkout" 
+                    type="date"
+                    defaultValue={formData.checkout}
+                    className="mt-2 w-full border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none" 
+                  />
                 </div>
               </div>
 
               <div>
                 <label htmlFor="room" className="text-label text-forest/60">ROOM PREFERENCE</label>
-                <select id="room" name="room"
-                  className="mt-2 w-full cursor-pointer border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none">
+                <select 
+                  id="room" 
+                  name="room"
+                  defaultValue={formData.room}
+                  className="mt-2 w-full cursor-pointer border-b border-forest/10 bg-transparent py-3 text-body text-forest focus:outline-none"
+                >
                   {CONTACT_PAGE.roomOptions.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
