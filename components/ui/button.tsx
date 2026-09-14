@@ -21,7 +21,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // ── Aurelia House ─────────────────────────────────────────────────
-        primary: "bg-forest text-ivory hover:bg-terracotta",
+        primary: "bg-forest text-ivory hover:bg-terracotta hover:text-ivory",
         secondary:
           "bg-transparent text-forest border border-forest hover:bg-forest/10",
         "primary-inverse":

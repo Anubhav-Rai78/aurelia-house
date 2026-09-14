@@ -71,7 +71,7 @@ export function MobileNav({
       <div className="px-6 pb-10">
         <Button
           href="/contact"
-          variant="primary-inverse"
+          variant="primary"
           className="w-full"
           onClick={onClose}
         >
