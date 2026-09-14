@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${dmSans.variable} scroll-smooth`}>
       <body className="min-h-screen bg-ivory font-sans text-charcoal">
         <Header />
         <main>{children}</main>

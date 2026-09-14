@@ -77,6 +77,8 @@ export function Footer() {
             <div className="mt-4 flex gap-4">
               <a
                 href={SOCIAL.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Aurelia House on Instagram"
                 className="inline-flex items-center justify-center rounded-full border border-ivory/30 p-2 transition-colors duration-300 hover:border-sand hover:text-sand"
               >
@@ -84,6 +86,8 @@ export function Footer() {
               </a>
               <a
                 href={SOCIAL.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Aurelia House on Facebook"
                 className="inline-flex items-center justify-center rounded-full border border-ivory/30 p-2 transition-colors duration-300 hover:border-sand hover:text-sand"
               >

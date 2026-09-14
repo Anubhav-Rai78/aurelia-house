@@ -54,10 +54,14 @@ export default function DiningPage() {
                 ))}
               </dl>
             </div>
+
+            <Button href="#sample-menu" variant="secondary" className="mt-8">
+              {DINING.viewFullMenuCta}
+            </Button>
           </SectionReveal>
 
           {/* Right — sample menu with text list + image accent */}
-          <SectionReveal className="md:col-span-6">
+          <SectionReveal className="md:col-span-6" id="sample-menu">
             <h2 className="text-label text-terracotta">{DINING.sampleMenuLabel}</h2>
             
             {/* Editorial text menu with dotted leader prices */}

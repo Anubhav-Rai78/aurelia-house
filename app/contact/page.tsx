@@ -34,6 +34,13 @@ export default function ContactPage() {
     if (searchParams.get("room")) {
       setFormData((prev) => ({ ...prev, room: searchParams.get("room")! }));
     }
+    if (searchParams.get("experience")) {
+      const experienceSlug = searchParams.get("experience")!;
+      setFormData((prev) => ({ 
+        ...prev, 
+        message: `I'm interested in reserving the "${experienceSlug}" experience. Please share more details.`
+      }));
+    }
   }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

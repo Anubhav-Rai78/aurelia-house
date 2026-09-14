@@ -41,10 +41,10 @@ export const FOOTER_NAV = [
 
 export const COPYRIGHT = "© 2026 Aurelia House. All rights reserved.";
 
-// ── Social (SPEC-GAP: real URLs not provided in brief) ──────────────────────
+// ── Social ────────────────────────────────────────────────────────────────────
 export const SOCIAL = {
-  instagram: "#",
-  facebook: "#",
+  instagram: "https://www.instagram.com/aureliahouse.kochi",
+  facebook: "https://www.facebook.com/aureliahouse.kochi",
 } as const;
 
 // ── Home Page Copy ───────────────────────────────────────────────────────────

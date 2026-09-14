@@ -12,14 +12,16 @@ import { cn } from "@/lib/utils";
 export function SectionReveal({
   children,
   className,
+  id,
 }: {
   children: React.ReactNode;
   className?: string;
+  id?: string;
 }) {
   const ref = useSectionReveal<HTMLDivElement>();
 
   return (
-    <div ref={ref} className={cn("reveal", className)}>
+    <div ref={ref} className={cn("reveal", className)} id={id}>
       {children}
     </div>
   );
