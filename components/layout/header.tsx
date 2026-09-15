@@ -66,13 +66,9 @@ export function Header() {
           solid
             ? "border-b border-forest/10 bg-ivory text-forest"
             : "bg-transparent text-ivory",
-          // Make sure the fixed header doesn't overlap page content.
-          "h-[72px]"
         )}
       >
-      
-      
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 md:px-12">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-4 md:px-12 md:py-5">
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
@@ -96,15 +92,21 @@ export function Header() {
                 href === "/"
                   ? pathname === "/"
                   : pathname.startsWith(href);
+
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "py-1 text-label transition-colors duration-300 hover:opacity-70",
-                    isActive && "border-b-2 border-terracotta pb-0.5 font-medium"
+                    "text-label font-sans text-[13px] md:text-[14px] font-medium tracking-[0.12em] uppercase transition-colors duration-300",
+                    solid
+                      ? "text-forest hover:text-terracotta"
+                      : "text-ivory/90 hover:text-ivory",
+                    "py-1",
+                    isActive && "border-b-2 border-terracotta pb-0.5"
                   )}
                 >
+                  <span className="sr-only">Current page:</span>
                   {item.label}
                 </Link>
               );
