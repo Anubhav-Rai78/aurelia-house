@@ -68,7 +68,7 @@ export function Header() {
             : "bg-transparent text-ivory",
         )}
       >
-        <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-6 md:px-12">
+        <div className="flex h-full w-full items-center justify-between px-6 md:px-8 lg:px-10">
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
