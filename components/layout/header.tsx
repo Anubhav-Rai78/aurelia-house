@@ -76,10 +76,18 @@ export function Header() {
             aria-label="Aurelia House — home"
           >
             <BrandIcon
-              size={30}
-              className="shrink-0 transition-colors duration-300 group-hover:text-terracotta"
+              size={44}
+              className={cn(
+                "h-10 md:h-11 w-auto shrink-0 transition-all duration-300 group-hover:text-terracotta",
+                !solid && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
+              )}
             />
-            <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
+            <span
+              className={cn(
+                "font-serif text-[22px] font-medium tracking-[0.02em] transition-all duration-300",
+                !solid && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+              )}
+            >
               {BRAND_NAME}
             </span>
           </Link>
@@ -98,11 +106,10 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "text-label font-sans text-[13px] md:text-[14px] font-medium tracking-[0.12em] uppercase transition-colors duration-300",
+                    "font-sans text-[13px] md:text-[14px] uppercase transition-all duration-300 py-1",
                     solid
-                      ? "text-forest hover:text-terracotta"
-                      : "text-ivory/90 hover:text-ivory",
-                    "py-1",
+                      ? "text-forest font-medium tracking-[0.12em] hover:text-terracotta"
+                      : "text-white font-semibold tracking-[0.14em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] hover:text-white/80",
                     isActive && "border-b-2 border-terracotta pb-0.5"
                   )}
                 >

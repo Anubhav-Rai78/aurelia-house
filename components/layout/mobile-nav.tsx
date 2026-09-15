@@ -52,8 +52,8 @@ export function MobileNav({
           className="group flex items-center gap-3"
         >
           <BrandIcon
-            size={120}
-            className="shrink-0 transition-colors duration-300 group-hover:text-terracotta"
+            size={44}
+            className="h-10 w-auto shrink-0 transition-colors duration-300 group-hover:text-terracotta"
           />
           <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
             {BRAND_NAME}
