@@ -72,22 +72,18 @@ export function Header() {
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
-            className="group flex items-center gap-3"
+            className={cn(
+              "flex items-center gap-3 py-1 transition-colors duration-300",
+              solid ? "text-forest" : "text-ivory"
+            )}
             aria-label="Aurelia House — home"
           >
             <BrandIcon
-              size={44}
-              className={cn(
-                "h-10 md:h-11 w-auto shrink-0 transition-all duration-300 group-hover:text-terracotta",
-                !solid && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
-              )}
+              size={64}
+              viewBox="88 154 293 189"
+              className="h-14 md:h-16 w-auto shrink-0 -my-2"
             />
-            <span
-              className={cn(
-                "font-serif text-[22px] font-medium tracking-[0.02em] transition-all duration-300",
-                !solid && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-              )}
-            >
+            <span className="font-serif text-[20px] md:text-[22px] font-medium tracking-[0.02em]">
               {BRAND_NAME}
             </span>
           </Link>

@@ -49,11 +49,12 @@ export function MobileNav({
         <Link
           href="/"
           onClick={onClose}
-          className="group flex items-center gap-3"
+          className="flex items-center gap-3"
         >
           <BrandIcon
-            size={44}
-            className="h-10 w-auto shrink-0 transition-colors duration-300 group-hover:text-terracotta"
+            size={64}
+            viewBox="88 154 293 189"
+            className="h-14 w-auto shrink-0 -my-2"
           />
           <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
             {BRAND_NAME}
