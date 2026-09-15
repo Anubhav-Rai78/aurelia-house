@@ -62,21 +62,21 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 min-h-[64px] transition-colors duration-300",
+          "fixed inset-x-0 top-0 z-50 h-[72px] transition-colors duration-300",
           solid
             ? "border-b border-forest/10 bg-ivory text-forest"
             : "bg-transparent text-ivory",
         )}
       >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-2.5 md:px-12 md:py-3">
+        <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-6 md:px-12">
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
-            className="group flex items-center gap-3 py-1"
+            className="group flex items-center gap-3"
             aria-label="Aurelia House — home"
           >
             <BrandIcon
-              size={120}
+              size={30}
               className="shrink-0 transition-colors duration-300 group-hover:text-terracotta"
             />
             <span className="font-serif text-[20px] font-medium tracking-[0.02em]">
