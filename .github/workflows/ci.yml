@@ -46,7 +46,11 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
+          # Authenticated request to the GitHub API (bumps the rate limit from
+          # 60 to 1,000 req/hr) so resolving the latest CLI release doesn't fail
+          # with "Failed to resolve latest Supabase CLI release: rate limit exceeded".
           version: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Link Supabase Project & Push Migrations
         env:
