@@ -13,7 +13,7 @@ export default function ExperiencesPage() {
   return (
     <>
       {/* Hero Banner */}
-      <section className="bg-sand/30 pb-16 pt-32 md:pb-[80px] md:pt-40">
+      <section className="bg-sand/30 pb-16 pt-24 md:pb-[80px] md:pt-28">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <h1 className="text-display-lg whitespace-pre-line text-center text-forest">

@@ -62,13 +62,13 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+          "fixed inset-x-0 top-0 z-50 min-h-[64px] transition-colors duration-300",
           solid
             ? "border-b border-forest/10 bg-ivory text-forest"
             : "bg-transparent text-ivory",
         )}
       >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-4 md:px-12 md:py-5">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-2.5 md:px-12 md:py-3">
           {/* Wordmark — brand name is already typed in caps; no CSS uppercase */}
           <Link
             href="/"
@@ -106,7 +106,6 @@ export function Header() {
                     isActive && "border-b-2 border-terracotta pb-0.5"
                   )}
                 >
-                  <span className="sr-only">Current page:</span>
                   {item.label}
                 </Link>
               );

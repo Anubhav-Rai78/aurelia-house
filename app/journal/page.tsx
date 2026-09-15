@@ -11,7 +11,7 @@ export const metadata = {
 export default function JournalPage() {
   return (
     <>
-      <section className="bg-sand/30 pt-32 pb-16 md:pt-40 md:pb-[80px]">
+      <section className="bg-sand/30 pt-24 pb-16 md:pt-28 md:pb-[80px]">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <h1 className="text-display-lg text-center text-forest">{JOURNAL.headline}</h1>

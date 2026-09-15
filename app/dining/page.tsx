@@ -95,7 +95,7 @@ export default function DiningPage() {
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-forest/80 via-forest/30 to-transparent" aria-hidden="true" />
-        <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40">
+        <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-16 pt-24 md:px-12 md:pb-24 md:pt-28">
           <h1 className="text-display-xl whitespace-pre-line text-ivory">
             {MORA_HEADLINE}
           </h1>

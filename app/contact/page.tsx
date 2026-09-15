@@ -101,7 +101,7 @@ export default function ContactPage() {
 
   return (
     <>
-      <section className="bg-sand/30 pb-16 pt-32 md:pb-[80px] md:pt-40">
+      <section className="bg-sand/30 pb-16 pt-24 md:pb-[80px] md:pt-28">
         <div className="mx-auto max-w-[1440px] px-6 md:px-12">
           <SectionReveal>
             <h1 className="text-display-lg text-center text-forest">{CONTACT_PAGE.headline}</h1>
